@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  PetListViewController.swift
 //  PetFinder
 //
 //  Created by Kotya on 17/04/2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class PetListViewController: UIViewController {
     
     let tableView = UITableView()
     var safeArea: UILayoutGuide!
@@ -31,18 +31,18 @@ class ViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(PetCell.self, forCellReuseIdentifier: "cell")
         tableView.dataSource = self
     }
 }
 
-extension ViewController: UITableViewDataSource {
+extension PetListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return animals.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! PetCell
         cell.textLabel?.text = animals[indexPath.row]
         return cell
     }
