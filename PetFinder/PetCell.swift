@@ -9,17 +9,26 @@ import UIKit
 
 class PetCell: UITableViewCell {
     
-//    private let petImage : UIImageView = {
-//     let imgView = UIImageView(image: )
-//     imgView.contentMode = .scaleAspectFit
-//     imgView.clipsToBounds = true
-//     return imgView
-//     }()
+    private let backgroundImage: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "BackgroundImage"))
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
+     }()
+    
+    private let nameLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textColor = .tertiaryLabel
+        label.text = "Name"
+        return label
+    }()
     
     private let ageLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .medium)
         label.textColor = .secondaryLabel
+        label.text = "Age"
         return label
     }()
     
@@ -27,6 +36,7 @@ class PetCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .medium)
         label.textColor = .secondaryLabel
+        label.text = "Gender"
         return label
     }()
     
@@ -34,6 +44,7 @@ class PetCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .medium)
         label.textColor = .secondaryLabel
+        label.text = "Breed"
         return label
     }()
     
@@ -41,33 +52,45 @@ class PetCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .medium)
         label.textColor = .secondaryLabel
+        label.text = "Weight"
         return label
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        addSubview(ageLabel)
-        addSubview(genderLabel)
-        addSubview(breedLabel)
-        addSubview(weightLabel)
         
-        let stackView = UIStackView(arrangedSubviews: [
+        let horizontalStackView = UIStackView(arrangedSubviews: [
             ageLabel,
             genderLabel,
             breedLabel,
             weightLabel
         ])
-        stackView.distribution = .equalSpacing
-        stackView.axis = .horizontal
-        stackView.spacing = 5
-        addSubview(stackView)
+        horizontalStackView.distribution = .equalSpacing
+        horizontalStackView.axis = .horizontal
+        horizontalStackView.spacing = 5
+//        addSubview(horizontalStackView)
+//        horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let verticalStackView = UIStackView(arrangedSubviews: [
+            nameLabel,
+            horizontalStackView
+        ])
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 4
+        addSubview(verticalStackView)
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            verticalStackView.topAnchor.constraint(greaterThanOrEqualTo: self.topAnchor),
+            verticalStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 12),
+            verticalStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8),
+            verticalStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12),
+            verticalStackView.heightAnchor.constraint(equalToConstant: 40),
+            self.heightAnchor.constraint(equalToConstant: 120)
         ])
+        
+        self.backgroundView = backgroundImage
+        verticalStackView.backgroundColor = .lightGray
     }
     
     required init?(coder: NSCoder) {

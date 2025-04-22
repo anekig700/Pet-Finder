@@ -43,7 +43,7 @@ extension PetListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! PetCell
-        cell.textLabel?.text = animals[indexPath.row]
+//        cell.textLabel?.text = animals[indexPath.row]
         return cell
     }
 }
