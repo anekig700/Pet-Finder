@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct Animals: Codable {
+    let animals: [Animal]
+}
+
 struct Animal: Codable {
     let id: Int
     let name: String

@@ -26,7 +26,7 @@ final class AnimalViewControllerViewModel: ObservableObject {
             case .success(let animals):
                 self?.animals = animals
             case .failure(let error):
-                print("Error retrieving animals: \(error.localizedDescription)")
+                print("Error retrieving animals: \(error)")
             }
         }
     }

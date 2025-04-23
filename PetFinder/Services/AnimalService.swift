@@ -27,15 +27,18 @@ final class AnimalService: AnimalServiceProtocol {
 
     func fetchAnimals(completion: @escaping (Result<[Animal], Error>) -> Void) {
         guard let url = URL(string: baseUrlString + Endpoint.animals.rawValue) else { return }
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(authTokenString)", forHTTPHeaderField: "Authorization")
 
-        urlSession.dataTask(with: url) { (data, response, error) in
+        urlSession.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 completion(.failure(error))
+                print(error)
             }
 
             do {
-                let users = try JSONDecoder.animalDecoder().decode([Animal].self, from: data!)
-                completion(.success(users))
+                let animals = try JSONDecoder.animalDecoder().decode(Animals.self, from: data!).animals
+                print(animals)
             } catch let error {
                 completion(.failure(error))
             }
