@@ -1,5 +1,5 @@
 //
-//  PetCell.swift
+//  AnimalCell.swift
 //  PetFinder
 //
 //  Created by Kotya on 20/04/2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PetCell: UITableViewCell {
+class AnimalCell: UITableViewCell {
     
     private let backgroundImage: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "BackgroundImage"))

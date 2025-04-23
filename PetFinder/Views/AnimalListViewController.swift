@@ -1,23 +1,34 @@
 //
-//  PetListViewController.swift
+//  AnimalListViewController.swift
 //  PetFinder
 //
 //  Created by Kotya on 17/04/2025.
 //
 
+import Combine
 import UIKit
 
-class PetListViewController: UIViewController {
+class AnimalListViewController: UIViewController {
     
     let tableView = UITableView()
     var safeArea: UILayoutGuide!
     var animals = ["Dog", "Cat", "Bird", "Fish", "Lizard", "Hamster", "Guinea pig"]
+    
+    private var cancellables: Set<AnyCancellable> = []
+    
+    private let viewModel = AnimalViewControllerViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         safeArea = view.layoutMarginsGuide
         setupTableView()
+        
+        viewModel.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] in
+            self?.tableView.reloadData()
+        }.store(in: &cancellables)
     }
 
     func setupTableView() {
@@ -31,18 +42,18 @@ class PetListViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
         
-        tableView.register(PetCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(AnimalCell.self, forCellReuseIdentifier: "cell")
         tableView.dataSource = self
     }
 }
 
-extension PetListViewController: UITableViewDataSource {
+extension AnimalListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return animals.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! PetCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AnimalCell
 //        cell.textLabel?.text = animals[indexPath.row]
         return cell
     }
