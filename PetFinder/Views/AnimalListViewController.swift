@@ -12,7 +12,7 @@ class AnimalListViewController: UIViewController {
     
     let tableView = UITableView()
     var safeArea: UILayoutGuide!
-    var animals = ["Dog", "Cat", "Bird", "Fish", "Lizard", "Hamster", "Guinea pig"]
+//    var animals = ["Dog", "Cat", "Bird", "Fish", "Lizard", "Hamster", "Guinea pig"]
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -49,12 +49,13 @@ class AnimalListViewController: UIViewController {
 
 extension AnimalListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return animals.count
+        print(viewModel.animals.count)
+        return viewModel.animals.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AnimalCell
-//        cell.textLabel?.text = animals[indexPath.row]
+        cell.textLabel?.text = viewModel.animals[indexPath.row].name
         return cell
     }
 }

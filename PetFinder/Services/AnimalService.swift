@@ -38,7 +38,7 @@ final class AnimalService: AnimalServiceProtocol {
 
             do {
                 let animals = try JSONDecoder.animalDecoder().decode(Animals.self, from: data!).animals
-                print(animals)
+                completion(.success(animals))
             } catch let error {
                 completion(.failure(error))
             }
