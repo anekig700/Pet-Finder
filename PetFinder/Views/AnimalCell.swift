@@ -9,8 +9,8 @@ import UIKit
 
 class AnimalCell: UITableViewCell {
     
-    private let backgroundImage: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "BackgroundImage"))
+    let backgroundImage: UIImageView = {
+        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
@@ -68,8 +68,6 @@ class AnimalCell: UITableViewCell {
         horizontalStackView.distribution = .equalSpacing
         horizontalStackView.axis = .horizontal
         horizontalStackView.spacing = 5
-//        addSubview(horizontalStackView)
-//        horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
         
         let verticalStackView = UIStackView(arrangedSubviews: [
             nameLabel,
@@ -86,7 +84,7 @@ class AnimalCell: UITableViewCell {
             verticalStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8),
             verticalStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12),
             verticalStackView.heightAnchor.constraint(equalToConstant: 40),
-            self.heightAnchor.constraint(equalToConstant: 120)
+            self.heightAnchor.constraint(equalToConstant: 200)
         ])
         
         self.backgroundView = backgroundImage

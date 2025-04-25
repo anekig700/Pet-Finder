@@ -12,12 +12,12 @@ class AnimalListViewController: UIViewController {
     
     let tableView = UITableView()
     var safeArea: UILayoutGuide!
-//    var animals = ["Dog", "Cat", "Bird", "Fish", "Lizard", "Hamster", "Guinea pig"]
+    let imageLoader = ImageLoader()
     
     private var cancellables: Set<AnyCancellable> = []
     
     private let viewModel = AnimalViewControllerViewModel()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -60,6 +60,12 @@ extension AnimalListViewController: UITableViewDataSource {
         cell.weightLabel.text = viewModel.animals[indexPath.row].size
         cell.genderLabel.text = viewModel.animals[indexPath.row].gender
         cell.breedLabel.text = viewModel.animals[indexPath.row].breeds.primary
+        imageLoader.obtainImageWithPath(imagePath: viewModel.animals[indexPath.row].photos.first?.medium ?? "") { (image) in
+            if let updateCell = tableView.cellForRow(at: indexPath) as? AnimalCell {
+                updateCell.backgroundImage.image = image
+                }
+            }
+        cell.selectionStyle = .none
         return cell
     }
 }

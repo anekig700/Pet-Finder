@@ -18,8 +18,13 @@ struct Animal: Codable {
     let size: String
     let gender: String
     let breeds: Breed
+    let photos: [Photo]
 }
 
 struct Breed: Codable {
     let primary: String
+}
+
+struct Photo: Codable {
+    let medium: String
 }
