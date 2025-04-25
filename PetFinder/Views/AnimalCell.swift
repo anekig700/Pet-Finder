@@ -16,7 +16,7 @@ class AnimalCell: UITableViewCell {
         return imageView
      }()
     
-    private let nameLabel: UILabel = {
+    let nameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .bold)
         label.textColor = .tertiaryLabel
@@ -24,7 +24,7 @@ class AnimalCell: UITableViewCell {
         return label
     }()
     
-    private let ageLabel: UILabel = {
+    let ageLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .medium)
         label.textColor = .secondaryLabel
@@ -32,7 +32,7 @@ class AnimalCell: UITableViewCell {
         return label
     }()
     
-    private let genderLabel: UILabel = {
+    let genderLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .medium)
         label.textColor = .secondaryLabel
@@ -40,7 +40,7 @@ class AnimalCell: UITableViewCell {
         return label
     }()
     
-    private let breedLabel: UILabel = {
+    let breedLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .medium)
         label.textColor = .secondaryLabel
@@ -48,7 +48,7 @@ class AnimalCell: UITableViewCell {
         return label
     }()
     
-    private let weightLabel: UILabel = {
+    let weightLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 10, weight: .medium)
         label.textColor = .secondaryLabel

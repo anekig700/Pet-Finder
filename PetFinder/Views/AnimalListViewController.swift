@@ -55,7 +55,10 @@ extension AnimalListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AnimalCell
-        cell.textLabel?.text = viewModel.animals[indexPath.row].name
+        cell.nameLabel.text = viewModel.animals[indexPath.row].name
+        cell.ageLabel.text = viewModel.animals[indexPath.row].age
+        cell.weightLabel.text = viewModel.animals[indexPath.row].size
+        cell.genderLabel.text = viewModel.animals[indexPath.row].gender
         return cell
     }
 }
