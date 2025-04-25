@@ -59,6 +59,7 @@ extension AnimalListViewController: UITableViewDataSource {
         cell.ageLabel.text = viewModel.animals[indexPath.row].age
         cell.weightLabel.text = viewModel.animals[indexPath.row].size
         cell.genderLabel.text = viewModel.animals[indexPath.row].gender
+        cell.breedLabel.text = viewModel.animals[indexPath.row].breeds.primary
         return cell
     }
 }
