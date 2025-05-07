@@ -65,7 +65,7 @@ class AnimalCell: UITableViewCell {
             breedLabel,
             weightLabel
         ])
-        horizontalStackView.distribution = .equalSpacing
+        horizontalStackView.distribution = .equalCentering
         horizontalStackView.axis = .horizontal
         horizontalStackView.spacing = 5
         
@@ -78,17 +78,27 @@ class AnimalCell: UITableViewCell {
         addSubview(verticalStackView)
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         
+        let mainStackView = UIStackView(arrangedSubviews: [
+            verticalStackView
+        ])
+        mainStackView.axis = .horizontal
+        addSubview(mainStackView)
+        mainStackView.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            verticalStackView.topAnchor.constraint(greaterThanOrEqualTo: self.topAnchor),
-            verticalStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 12),
-            verticalStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8),
-            verticalStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12),
-            verticalStackView.heightAnchor.constraint(equalToConstant: 40),
+            mainStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            mainStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            mainStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            mainStackView.heightAnchor.constraint(equalToConstant: 40),
+            verticalStackView.topAnchor.constraint(greaterThanOrEqualTo: mainStackView.topAnchor),
+            verticalStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 12),
+            verticalStackView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor, constant: -8),
+            verticalStackView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -12),
             self.heightAnchor.constraint(equalToConstant: 200)
         ])
         
         self.backgroundView = backgroundImage
-        verticalStackView.backgroundColor = .lightGray
+        mainStackView.backgroundColor = .white.withAlphaComponent(0.8)
     }
     
     required init?(coder: NSCoder) {

@@ -37,9 +37,9 @@ class AnimalListViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
         
         tableView.register(AnimalCell.self, forCellReuseIdentifier: "cell")
