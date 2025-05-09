@@ -19,6 +19,7 @@ struct Animal: Codable {
     let gender: String
     let breeds: Breed
     let photos: [Photo]
+    let description: String?
 }
 
 struct Breed: Codable {

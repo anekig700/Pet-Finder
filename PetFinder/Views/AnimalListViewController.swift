@@ -74,6 +74,6 @@ extension AnimalListViewController: UITableViewDataSource {
 extension AnimalListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        navigationController?.pushViewController(AnimalDetailsViewController(), animated: false)
+        navigationController?.pushViewController(AnimalDetailsViewController(animal: viewModel.animals[indexPath.row]), animated: false)
     }
 }
