@@ -44,6 +44,7 @@ class AnimalListViewController: UIViewController {
         
         tableView.register(AnimalCell.self, forCellReuseIdentifier: "cell")
         tableView.dataSource = self
+        tableView.delegate = self
     }
 }
 
@@ -65,7 +66,14 @@ extension AnimalListViewController: UITableViewDataSource {
                 updateCell.backgroundImage.image = image
                 }
             }
-        cell.selectionStyle = .none
+//        cell.selectionStyle = .none
         return cell
+    }
+}
+
+extension AnimalListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        navigationController?.pushViewController(AnimalDetailsViewController(), animated: false)
     }
 }
