@@ -34,4 +34,9 @@ struct Photo: Codable {
 struct Contact: Codable {
     let email: String?
     let phone: String?
+    let address: Address
+}
+
+struct Address: Codable {
+    let address1: String?
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MapKit
 import UIKit
 
 class AnimalDetailsViewController: UIViewController {
@@ -59,6 +60,13 @@ class AnimalDetailsViewController: UIViewController {
         return label
     }()
     
+    let mapView : MKMapView = {
+        let map = MKMapView()
+        map.layer.cornerRadius = 8
+        map.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        return map
+    }()
+    
     let adoptButton: UIButton = {
         let button = UIButton()
         button.setTitle("Contact Organization", for: .normal)
@@ -91,10 +99,12 @@ class AnimalDetailsViewController: UIViewController {
         view.addSubview(descriptionLabel)
         view.addSubview(contactsStackView)
         view.addSubview(adoptButton)
+        view.addSubview(mapView)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         contactsStackView.translatesAutoresizingMaskIntoConstraints = false
         adoptButton.translatesAutoresizingMaskIntoConstraints = false
+        mapView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -106,6 +116,9 @@ class AnimalDetailsViewController: UIViewController {
             contactsStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 8),
             contactsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             contactsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            mapView.topAnchor.constraint(equalTo: contactsStackView.bottomAnchor, constant: 16),
+            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
@@ -116,7 +129,40 @@ class AnimalDetailsViewController: UIViewController {
         nameLabel.text = animal.name
         descriptionLabel.text = animal.description
         emailLabel.text = animal.contact.email
-        phoneLabel.text = animal.contact.phone 
+        phoneLabel.text = animal.contact.phone
+        showAddressOnMap(animal.contact.address.address1)
+    }
+    
+    func showAddressOnMap(_ address: String?) {
+        guard let address = address else { return }
+        let geocoder = CLGeocoder()
+            
+        geocoder.geocodeAddressString(address) { [weak self] placemarks, error in
+            guard let self = self else { return }
+                
+            if let error = error {
+                print("Geocoding failed: \(error.localizedDescription)")
+                return
+            }
+                
+            guard let placemark = placemarks?.first,
+                let location = placemark.location else {
+                print("No matching location found")
+                return
+            }
+                
+            let coordinate = location.coordinate
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            annotation.title = address
+                
+            self.mapView.addAnnotation(annotation)
+            self.mapView.setRegion(MKCoordinateRegion(
+                center: coordinate,
+                latitudinalMeters: 1000,
+                longitudinalMeters: 1000
+            ), animated: true)
+        }
     }
     
     @objc func showCallMenu() {
