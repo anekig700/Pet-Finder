@@ -7,6 +7,7 @@
 
 import Foundation
 import MapKit
+import MessageUI
 import UIKit
 
 class AnimalDetailsViewController: UIViewController {
@@ -74,7 +75,8 @@ class AnimalDetailsViewController: UIViewController {
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 8
         button.heightAnchor.constraint(equalToConstant: 56).isActive = true
-        button.addTarget(self, action: #selector(showCallMenu), for: .touchUpInside)
+        button.addTarget(self, action: #selector(showContactMenu), for: .touchUpInside)
+        button.isHidden = true
         return button
     }()
     
@@ -125,11 +127,21 @@ class AnimalDetailsViewController: UIViewController {
         ])
     }
     
+    private var showAdoptButton: Bool {
+        if animal.contact.email != nil {
+            return true
+        } else if animal.contact.phone != nil {
+            return true
+        }
+        return false
+    }
+    
     func fillView() {
         nameLabel.text = animal.name
         descriptionLabel.text = animal.description
         emailLabel.text = animal.contact.email
         phoneLabel.text = animal.contact.phone
+        adoptButton.isHidden = !showAdoptButton
         showAddressOnMap(animal.contact.address.address1)
     }
     
@@ -165,7 +177,7 @@ class AnimalDetailsViewController: UIViewController {
         }
     }
     
-    @objc func showCallMenu() {
+    @objc func showContactMenu() {
         
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -183,10 +195,35 @@ class AnimalDetailsViewController: UIViewController {
             alert.addAction(callAction)
         }
         
+        if let emailAddress = animal.contact.email {
+            let emailAction = UIAlertAction(title: "Email \(emailAddress)", style: .default) { _ in
+                if MFMailComposeViewController.canSendMail() {
+                    let mailVC = MFMailComposeViewController()
+                    mailVC.mailComposeDelegate = self
+                    mailVC.setToRecipients([emailAddress])
+                    mailVC.setSubject("Adopt \(self.animal.name)")
+                    mailVC.setMessageBody("Hi there,", isHTML: false)
+                    self.present(mailVC, animated: true)
+                } else {
+                    print("Cannot send email. Configure an email account.")
+                }
+            }
+            alert.addAction(emailAction)
+        }
+        
         alert.addAction(cancelAction)
         
         present(alert, animated: true, completion: nil)
     }
 }
 
+extension AnimalDetailsViewController: MFMailComposeViewControllerDelegate {
+    func mailComposeController(
+        _ controller: MFMailComposeViewController,
+        didFinishWith result: MFMailComposeResult,
+        error: Error?
+    ) {
+        controller.dismiss(animated: true)
+    }
+}
 
