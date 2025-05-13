@@ -64,9 +64,8 @@ extension AnimalListViewController: UITableViewDataSource {
         imageLoader.obtainImageWithPath(imagePath: viewModel.animals[indexPath.row].photos.first?.medium ?? "") { (image) in
             if let updateCell = tableView.cellForRow(at: indexPath) as? AnimalCell {
                 updateCell.backgroundImage.image = image
-                }
             }
-//        cell.selectionStyle = .none
+        }
         return cell
     }
 }

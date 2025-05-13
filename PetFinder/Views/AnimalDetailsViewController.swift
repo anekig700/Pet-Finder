@@ -13,6 +13,7 @@ import UIKit
 class AnimalDetailsViewController: UIViewController {
     
     private let animal: Animal
+    let imageLoader = ImageLoader()
 
     init(animal: Animal) {
         self.animal = animal
@@ -22,6 +23,8 @@ class AnimalDetailsViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    var photoCollectionView: UICollectionView!
     
     let nameLabel: UILabel = {
         let label = UILabel()
@@ -86,6 +89,21 @@ class AnimalDetailsViewController: UIViewController {
         setupView()
         fillView()
     }
+    
+    private func prepareCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
+        
+        photoCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        photoCollectionView.isPagingEnabled = true
+        photoCollectionView.showsHorizontalScrollIndicator = false
+        photoCollectionView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        photoCollectionView.backgroundColor = .yellow
+        photoCollectionView.register(AnimalCarouselImageCell.self, forCellWithReuseIdentifier: "carouselImageCell")
+        photoCollectionView.dataSource = self
+        photoCollectionView.delegate = self
+    }
 
     func setupView() {
         
@@ -97,11 +115,15 @@ class AnimalDetailsViewController: UIViewController {
         contactsStackView.axis = .vertical
         contactsStackView.spacing = 8
         
+        prepareCollectionView()
+        
+        view.addSubview(photoCollectionView)
         view.addSubview(nameLabel)
         view.addSubview(descriptionLabel)
         view.addSubview(contactsStackView)
         view.addSubview(adoptButton)
         view.addSubview(mapView)
+        photoCollectionView.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         contactsStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -109,7 +131,10 @@ class AnimalDetailsViewController: UIViewController {
         mapView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            photoCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            photoCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            photoCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            nameLabel.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 16),
             nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
@@ -217,6 +242,8 @@ class AnimalDetailsViewController: UIViewController {
     }
 }
 
+// MARK: - MFMailComposeViewControllerDelegate
+
 extension AnimalDetailsViewController: MFMailComposeViewControllerDelegate {
     func mailComposeController(
         _ controller: MFMailComposeViewController,
@@ -224,6 +251,36 @@ extension AnimalDetailsViewController: MFMailComposeViewControllerDelegate {
         error: Error?
     ) {
         controller.dismiss(animated: true)
+    }
+}
+
+// MARK: - UICollectionViewDataSource
+
+extension AnimalDetailsViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        animal.photos.count
+        1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "carouselImageCell", for: indexPath) as! AnimalCarouselImageCell
+        imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { (image) in
+            cell.photoImageView.image = image
+            cell.frame.size = collectionView.bounds.size
+        }
+//        cell.configure(with: UIImage(named: images[indexPath.item]))
+        return cell
+    }
+}
+
+// MARK: - UICollectionViewDelegate
+
+extension AnimalDetailsViewController: UICollectionViewDelegate {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath) -> CGSize {
+            return collectionView.frame.size
     }
 }
 
