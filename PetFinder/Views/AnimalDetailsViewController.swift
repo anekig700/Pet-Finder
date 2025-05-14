@@ -94,12 +94,14 @@ class AnimalDetailsViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
         
         photoCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        photoCollectionView.layer.cornerRadius = 8
         photoCollectionView.isPagingEnabled = true
         photoCollectionView.showsHorizontalScrollIndicator = false
         photoCollectionView.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        photoCollectionView.backgroundColor = .yellow
+        photoCollectionView.backgroundColor = .clear
         photoCollectionView.register(AnimalCarouselImageCell.self, forCellWithReuseIdentifier: "carouselImageCell")
         photoCollectionView.dataSource = self
         photoCollectionView.delegate = self
@@ -258,29 +260,27 @@ extension AnimalDetailsViewController: MFMailComposeViewControllerDelegate {
 
 extension AnimalDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        animal.photos.count
-        1
+        animal.photos.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "carouselImageCell", for: indexPath) as! AnimalCarouselImageCell
-        imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { (image) in
+        imageLoader.obtainImageWithPath(imagePath: animal.photos[indexPath.row].medium) { (image) in
             cell.photoImageView.image = image
-            cell.frame.size = collectionView.bounds.size
         }
 //        cell.configure(with: UIImage(named: images[indexPath.item]))
         return cell
     }
 }
 
-// MARK: - UICollectionViewDelegate
+// MARK: - UICollectionViewDelegateFlowLayout
 
-extension AnimalDetailsViewController: UICollectionViewDelegate {
+extension AnimalDetailsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath) -> CGSize {
-            return collectionView.frame.size
+            return collectionView.bounds.size
     }
 }
 

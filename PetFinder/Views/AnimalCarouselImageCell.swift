@@ -14,6 +14,7 @@ class AnimalCarouselImageCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill  
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 8
         return imageView
     }()
 
