@@ -24,7 +24,7 @@ class AnimalDetailsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var photoCollectionView: UICollectionView!
+    private var photoCollectionView: UICollectionView!
     
     let nameLabel: UILabel = {
         let label = UILabel()
@@ -83,6 +83,15 @@ class AnimalDetailsViewController: UIViewController {
         return button
     }()
     
+    let photoPageControl: UIPageControl = {
+        let pageControl = UIPageControl()
+        pageControl.currentPage = 0
+        pageControl.pageIndicatorTintColor = .lightGray
+        pageControl.currentPageIndicatorTintColor = .black
+        pageControl.isUserInteractionEnabled = false
+        return pageControl
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -120,12 +129,14 @@ class AnimalDetailsViewController: UIViewController {
         prepareCollectionView()
         
         view.addSubview(photoCollectionView)
+        view.addSubview(photoPageControl)
         view.addSubview(nameLabel)
         view.addSubview(descriptionLabel)
         view.addSubview(contactsStackView)
         view.addSubview(adoptButton)
         view.addSubview(mapView)
         photoCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        photoPageControl.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         contactsStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -136,7 +147,9 @@ class AnimalDetailsViewController: UIViewController {
             photoCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
             photoCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             photoCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            nameLabel.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 16),
+            photoPageControl.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 4),
+            photoPageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            nameLabel.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 20),
             nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
@@ -164,6 +177,7 @@ class AnimalDetailsViewController: UIViewController {
     }
     
     func fillView() {
+        photoPageControl.numberOfPages = animal.photos.count
         nameLabel.text = animal.name
         descriptionLabel.text = animal.description
         emailLabel.text = animal.contact.email
@@ -281,6 +295,16 @@ extension AnimalDetailsViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath) -> CGSize {
             return collectionView.bounds.size
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let pageWidth = scrollView.frame.width
+        guard pageWidth > 0 else { return }
+
+        let fractionalPage = scrollView.contentOffset.x / pageWidth
+        let currentPage = Int(round(fractionalPage))
+
+        photoPageControl.currentPage = max(0, min(currentPage, photoPageControl.numberOfPages - 1))
     }
 }
 
