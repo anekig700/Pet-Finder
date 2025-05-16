@@ -42,28 +42,6 @@ class AnimalDetailsViewController: UIViewController {
         return label
     }()
     
-    let contactsLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .secondaryLabel
-        label.text = "Contacts:"
-        return label
-    }()
-    
-    let emailLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .secondaryLabel
-        return label
-    }()
-    
-    let phoneLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .tertiaryLabel
-        return label
-    }()
-    
     let mapView : MKMapView = {
         let map = MKMapView()
         map.layer.cornerRadius = 8
@@ -120,21 +98,12 @@ class AnimalDetailsViewController: UIViewController {
 
     func setupView() {
         
-        let contactsStackView = UIStackView(arrangedSubviews: [
-            contactsLabel,
-            emailLabel,
-            phoneLabel
-        ])
-        contactsStackView.axis = .vertical
-        contactsStackView.spacing = 8
-        
         prepareCollectionView()
         
         view.addSubview(photoCollectionView)
         view.addSubview(photoPageControl)
         view.addSubview(nameLabel)
         view.addSubview(descriptionLabel)
-        view.addSubview(contactsStackView)
         view.addSubview(mapView)
         view.addSubview(adoptButton)
         view.bringSubviewToFront(adoptButton)
@@ -142,7 +111,6 @@ class AnimalDetailsViewController: UIViewController {
         photoPageControl.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        contactsStackView.translatesAutoresizingMaskIntoConstraints = false
         adoptButton.translatesAutoresizingMaskIntoConstraints = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -158,10 +126,7 @@ class AnimalDetailsViewController: UIViewController {
             descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
             descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            contactsStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 8),
-            contactsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            contactsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            mapView.topAnchor.constraint(equalTo: contactsStackView.bottomAnchor, constant: 16),
+            mapView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
             mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -185,8 +150,6 @@ class AnimalDetailsViewController: UIViewController {
         photoPageControl.isHidden = animal.photos.count <= 1
         nameLabel.text = animal.name
         descriptionLabel.text = animal.description
-        emailLabel.text = animal.contact.email
-        phoneLabel.text = animal.contact.phone
         adoptButton.isHidden = !showAdoptButton
         if let fullAddress = animal.contact.address.fullAddress {
             mapView.isHidden = false
