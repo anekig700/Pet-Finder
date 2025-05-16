@@ -38,5 +38,18 @@ struct Contact: Codable {
 }
 
 struct Address: Codable {
-    let address1: String?
+    let city: String?
+    let state: String?
+    let postcode: String?
+    
+    var fullAddress: String? {
+        if let city = city,
+           let state = state,
+           let postcode = postcode
+        {
+            return "\(city), \(state), \(postcode)"
+        } else {
+            return nil
+        }
+    }
 }

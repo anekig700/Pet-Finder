@@ -68,6 +68,7 @@ class AnimalDetailsViewController: UIViewController {
         let map = MKMapView()
         map.layer.cornerRadius = 8
         map.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        map.isHidden = true
         return map
     }()
     
@@ -111,6 +112,7 @@ class AnimalDetailsViewController: UIViewController {
         photoCollectionView.showsHorizontalScrollIndicator = false
         photoCollectionView.heightAnchor.constraint(equalToConstant: 300).isActive = true
         photoCollectionView.backgroundColor = .clear
+        photoCollectionView.isHidden = true
         photoCollectionView.register(AnimalCarouselImageCell.self, forCellWithReuseIdentifier: "carouselImageCell")
         photoCollectionView.dataSource = self
         photoCollectionView.delegate = self
@@ -133,8 +135,9 @@ class AnimalDetailsViewController: UIViewController {
         view.addSubview(nameLabel)
         view.addSubview(descriptionLabel)
         view.addSubview(contactsStackView)
-        view.addSubview(adoptButton)
         view.addSubview(mapView)
+        view.addSubview(adoptButton)
+        view.bringSubviewToFront(adoptButton)
         photoCollectionView.translatesAutoresizingMaskIntoConstraints = false
         photoPageControl.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -177,13 +180,19 @@ class AnimalDetailsViewController: UIViewController {
     }
     
     func fillView() {
+        photoCollectionView.isHidden = animal.photos.isEmpty
         photoPageControl.numberOfPages = animal.photos.count
+        photoPageControl.isHidden = animal.photos.count <= 1
         nameLabel.text = animal.name
         descriptionLabel.text = animal.description
         emailLabel.text = animal.contact.email
         phoneLabel.text = animal.contact.phone
         adoptButton.isHidden = !showAdoptButton
-        showAddressOnMap(animal.contact.address.address1)
+        if let fullAddress = animal.contact.address.fullAddress {
+            mapView.isHidden = false
+            showAddressOnMap(fullAddress)
+        }
+        
     }
     
     func showAddressOnMap(_ address: String?) {
