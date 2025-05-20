@@ -21,6 +21,7 @@ struct Animal: Codable {
     let photos: [Photo]
     let description: String?
     let contact: Contact
+    let organization_id: String
 }
 
 struct Breed: Codable {

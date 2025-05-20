@@ -9,16 +9,22 @@ import Foundation
 import MapKit
 import MessageUI
 import UIKit
+import Combine
 
 class AnimalDetailsViewController: UIViewController {
     
     private let animal: Animal
     let imageLoader = ImageLoader()
+    
+    private var cancellables: Set<AnyCancellable> = []
 
     init(animal: Animal) {
         self.animal = animal
+        self.viewModel = AnimalDetailsViewModel(id: animal.organization_id)
         super.init(nibName: nil, bundle: nil)
     }
+    
+    private let viewModel: AnimalDetailsViewModel
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -50,6 +56,22 @@ class AnimalDetailsViewController: UIViewController {
         return map
     }()
     
+    var organizationNameLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.textColor = .secondaryLabel
+        return label
+    }()
+    
+    let organizationLogo: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.layer.cornerRadius = 24
+        imageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
+        return imageView
+    }()
+    
     let adoptButton: UIButton = {
         let button = UIButton()
         button.setTitle("Contact Organization", for: .normal)
@@ -76,6 +98,12 @@ class AnimalDetailsViewController: UIViewController {
         view.backgroundColor = .white
         setupView()
         fillView()
+        
+        viewModel.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] in
+                self?.organizationNameLabel.text = self?.viewModel.organization?.organization.name
+        }.store(in: &cancellables)
     }
     
     private func prepareCollectionView() {
@@ -100,11 +128,20 @@ class AnimalDetailsViewController: UIViewController {
         
         prepareCollectionView()
         
+        let horizontalStackView = UIStackView(arrangedSubviews: [
+            organizationLogo,
+            organizationNameLabel
+        ])
+        horizontalStackView.distribution = .fillProportionally
+        horizontalStackView.axis = .horizontal
+        horizontalStackView.spacing = 16
+        
         view.addSubview(photoCollectionView)
         view.addSubview(photoPageControl)
         view.addSubview(nameLabel)
         view.addSubview(descriptionLabel)
         view.addSubview(mapView)
+        view.addSubview(horizontalStackView)
         view.addSubview(adoptButton)
         view.bringSubviewToFront(adoptButton)
         photoCollectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -113,6 +150,7 @@ class AnimalDetailsViewController: UIViewController {
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         adoptButton.translatesAutoresizingMaskIntoConstraints = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
+        horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             photoCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
@@ -120,7 +158,7 @@ class AnimalDetailsViewController: UIViewController {
             photoCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             photoPageControl.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 4),
             photoPageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            nameLabel.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 20),
+            nameLabel.topAnchor.constraint(equalTo: photoPageControl.bottomAnchor, constant: 4),
             nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
@@ -129,6 +167,9 @@ class AnimalDetailsViewController: UIViewController {
             mapView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
             mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            horizontalStackView.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 16),
+            horizontalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            horizontalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
@@ -154,8 +195,7 @@ class AnimalDetailsViewController: UIViewController {
         if let fullAddress = animal.contact.address.fullAddress {
             mapView.isHidden = false
             showAddressOnMap(fullAddress)
-        }
-        
+        }   
     }
     
     func showAddressOnMap(_ address: String?) {
