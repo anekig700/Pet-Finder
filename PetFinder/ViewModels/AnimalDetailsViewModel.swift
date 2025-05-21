@@ -16,12 +16,11 @@ final class AnimalDetailsViewModel: ObservableObject {
 
     init(service: AnimalServiceProtocol = AnimalService(), id: String) {
         self.service = service
-
         retrieveOrganization(id: id)
     }
 
     private func retrieveOrganization(id: String) {
-        service.fetchOrganizationInfo(with: id) { [weak self] result in
+        service.fetchInfo(path: Endpoint.organizations.rawValue + "/\(id)") { [weak self] (result: Result<OrganizationDetails, Error>) in
             switch result {
             case .success(let organization):
                 self?.organization = organization

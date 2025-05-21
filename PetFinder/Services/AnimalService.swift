@@ -8,16 +8,15 @@
 import Foundation
 
 protocol AnimalServiceProtocol {
-    func fetchAnimals(completion: @escaping (Result<[Animal], Error>) -> Void)
-    func fetchOrganizationInfo(with id: String, completion: @escaping (Result<OrganizationDetails, Error>) -> Void)
+    func fetchInfo<T: Decodable>(path: String, completion: @escaping (Result<T, Error>) -> Void)
+}
+
+enum Endpoint: String {
+    case animals = "/v2/animals"
+    case organizations = "/v2/organizations"
 }
 
 final class AnimalService: AnimalServiceProtocol {
-
-    enum Endpoint: String {
-        case animals = "/v2/animals"
-        case organizations = "/v2/organizations"
-    }
     
 
     private let baseUrlString = "https://api.petfinder.com"
@@ -28,8 +27,8 @@ final class AnimalService: AnimalServiceProtocol {
         self.urlSession = urlSession
     }
 
-    func fetchAnimals(completion: @escaping (Result<[Animal], Error>) -> Void) {
-        guard let url = URL(string: baseUrlString + Endpoint.animals.rawValue) else { return }
+    func fetchInfo<T>(path: String, completion: @escaping (Result<T, any Error>) -> Void) where T : Decodable {
+        guard let url = URL(string: baseUrlString + path) else { return }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(authTokenString)", forHTTPHeaderField: "Authorization")
 
@@ -40,38 +39,11 @@ final class AnimalService: AnimalServiceProtocol {
             }
 
             do {
-                let animals = try JSONDecoder.animalDecoder().decode(Animals.self, from: data!).animals
-                completion(.success(animals))
+                let returnType = try JSONDecoder().decode(T.self, from: data!)
+                completion(.success(returnType))
             } catch let error {
                 completion(.failure(error))
             }
         }.resume()
-    }
-    
-    func fetchOrganizationInfo(with id: String, completion: @escaping (Result<OrganizationDetails, Error>) -> Void) {
-        guard let url = URL(string: baseUrlString + Endpoint.organizations.rawValue + "/\(id)") else { return }
-        var request = URLRequest(url: url)
-        print("URL: \(url)")
-        request.setValue("Bearer \(authTokenString)", forHTTPHeaderField: "Authorization")
-
-        urlSession.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                completion(.failure(error))
-                print(error)
-            }
-
-            do {
-                let organization = try JSONDecoder.animalDecoder().decode(OrganizationDetails.self, from: data!)
-                completion(.success(organization))
-            } catch let error {
-                completion(.failure(error))
-            }
-        }.resume()
-    }
-}
-
-extension JSONDecoder {
-    static func animalDecoder() -> JSONDecoder {
-        JSONDecoder()
     }
 }

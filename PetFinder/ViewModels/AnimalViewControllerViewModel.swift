@@ -21,10 +21,10 @@ final class AnimalViewControllerViewModel: ObservableObject {
     }
 
     private func retrieveAnimals() {
-        service.fetchAnimals { [weak self] result in
+        service.fetchInfo(path: Endpoint.animals.rawValue) { [weak self] (result: Result<Animals, Error>) in
             switch result {
             case .success(let animals):
-                self?.animals = animals
+                self?.animals = animals.animals
             case .failure(let error):
                 print("Error retrieving animals: \(error)")
             }
