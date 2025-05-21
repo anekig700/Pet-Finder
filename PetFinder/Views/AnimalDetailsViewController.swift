@@ -30,6 +30,8 @@ class AnimalDetailsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private var scrollView = UIScrollView()
+    private var contentView = UIView()
     private var photoCollectionView: UICollectionView!
     
     let nameLabel: UILabel = {
@@ -126,6 +128,9 @@ class AnimalDetailsViewController: UIViewController {
 
     func setupView() {
         
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+    
         prepareCollectionView()
         
         let horizontalStackView = UIStackView(arrangedSubviews: [
@@ -136,14 +141,16 @@ class AnimalDetailsViewController: UIViewController {
         horizontalStackView.axis = .horizontal
         horizontalStackView.spacing = 16
         
-        view.addSubview(photoCollectionView)
-        view.addSubview(photoPageControl)
-        view.addSubview(nameLabel)
-        view.addSubview(descriptionLabel)
-        view.addSubview(mapView)
-        view.addSubview(horizontalStackView)
+        contentView.addSubview(photoCollectionView)
+        contentView.addSubview(photoPageControl)
+        contentView.addSubview(nameLabel)
+        contentView.addSubview(descriptionLabel)
+        contentView.addSubview(mapView)
+        contentView.addSubview(horizontalStackView)
         view.addSubview(adoptButton)
         view.bringSubviewToFront(adoptButton)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
         photoCollectionView.translatesAutoresizingMaskIntoConstraints = false
         photoPageControl.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -153,23 +160,33 @@ class AnimalDetailsViewController: UIViewController {
         horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            photoCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-            photoCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            photoCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            photoCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            photoCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            photoCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             photoPageControl.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 4),
-            photoPageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            photoPageControl.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             nameLabel.topAnchor.constraint(equalTo: photoPageControl.bottomAnchor, constant: 4),
-            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             mapView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            mapView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            mapView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             horizontalStackView.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 16),
-            horizontalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            horizontalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            horizontalStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
