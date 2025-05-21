@@ -68,7 +68,7 @@ class AnimalDetailsViewController: UIViewController {
     let organizationLogo: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.layer.cornerRadius = 24
+        imageView.layer.cornerRadius = 8
         imageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
         return imageView
@@ -105,6 +105,9 @@ class AnimalDetailsViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] in
                 self?.organizationNameLabel.text = self?.viewModel.organization?.organization.name
+                self?.imageLoader.obtainImageWithPath(imagePath: self?.viewModel.organization?.organization.photos.first?.medium ?? "") { (image) in
+                    self?.organizationLogo.image = image
+                }
         }.store(in: &cancellables)
     }
     
@@ -180,13 +183,13 @@ class AnimalDetailsViewController: UIViewController {
             descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
             descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            mapView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-            mapView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            mapView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            horizontalStackView.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 16),
+            horizontalStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
             horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            horizontalStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            mapView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
+            mapView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            mapView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            mapView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -38),
             adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
