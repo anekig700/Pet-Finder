@@ -15,6 +15,8 @@ struct Organization: Codable {
     let id: String
     let name: String
     let photos: [Photo]
-    let description: String?
-    let contact: Contact?
+    let email: String?
+    let phone: String?
+    let mission_statement: String?
+    let website: String?
 }

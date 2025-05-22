@@ -27,7 +27,6 @@ class OrganizationDetailsViewController: UIViewController {
     
     private var scrollView = UIScrollView()
     private var contentView = UIView()
-    private var photoCollectionView: UICollectionView!
     
     let nameLabel: UILabel = {
         let label = UILabel()
@@ -53,22 +52,6 @@ class OrganizationDetailsViewController: UIViewController {
         return map
     }()
     
-    var organizationNameLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .secondaryLabel
-        return label
-    }()
-    
-    let organizationLogo: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.layer.cornerRadius = 8
-        imageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
-        return imageView
-    }()
-    
     let adoptButton: UIButton = {
         let button = UIButton()
         button.setTitle("Contact Organization", for: .normal)
@@ -76,18 +59,9 @@ class OrganizationDetailsViewController: UIViewController {
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 8
         button.heightAnchor.constraint(equalToConstant: 56).isActive = true
-//        button.addTarget(self, action: #selector(showContactMenu), for: .touchUpInside)
+        button.addTarget(self, action: #selector(showContactMenu), for: .touchUpInside)
         button.isHidden = true
         return button
-    }()
-    
-    let photoPageControl: UIPageControl = {
-        let pageControl = UIPageControl()
-        pageControl.currentPage = 0
-        pageControl.pageIndicatorTintColor = .lightGray
-        pageControl.currentPageIndicatorTintColor = .black
-        pageControl.isUserInteractionEnabled = false
-        return pageControl
     }()
     
     override func viewDidLoad() {
@@ -96,66 +70,23 @@ class OrganizationDetailsViewController: UIViewController {
         setupView()
         fillView()
     }
-    
-    private func prepareCollectionView() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        
-        photoCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        photoCollectionView.layer.cornerRadius = 8
-        photoCollectionView.isPagingEnabled = true
-        photoCollectionView.showsHorizontalScrollIndicator = false
-        photoCollectionView.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        photoCollectionView.backgroundColor = .clear
-        photoCollectionView.isHidden = true
-        photoCollectionView.register(AnimalCarouselImageCell.self, forCellWithReuseIdentifier: "carouselImageCell")
-        photoCollectionView.dataSource = self
-        photoCollectionView.delegate = self
-    }
 
     func setupView() {
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-    
-        prepareCollectionView()
         
-        let horizontalStackView = UIStackView(arrangedSubviews: [
-            organizationLogo,
-            organizationNameLabel
-        ])
-        horizontalStackView.distribution = .fillProportionally
-        horizontalStackView.axis = .horizontal
-        horizontalStackView.spacing = 16
-        horizontalStackView.layer.borderWidth = 1.0
-        horizontalStackView.layer.borderColor = UIColor.lightGray.cgColor
-        horizontalStackView.layer.cornerRadius = 8
-        horizontalStackView.clipsToBounds = true
-        
-        
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(horizontalStackViewTapped))
-//        horizontalStackView.isUserInteractionEnabled = true
-//        horizontalStackView.addGestureRecognizer(tapGesture)
-        
-        contentView.addSubview(photoCollectionView)
-        contentView.addSubview(photoPageControl)
         contentView.addSubview(nameLabel)
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(mapView)
-        contentView.addSubview(horizontalStackView)
         view.addSubview(adoptButton)
         view.bringSubviewToFront(adoptButton)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        photoCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        photoPageControl.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         adoptButton.translatesAutoresizingMaskIntoConstraints = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
-        horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -167,21 +98,13 @@ class OrganizationDetailsViewController: UIViewController {
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            photoCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            photoCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            photoCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            photoPageControl.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 4),
-            photoPageControl.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            nameLabel.topAnchor.constraint(equalTo: photoPageControl.bottomAnchor, constant: 4),
+            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
             descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            horizontalStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-            horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            mapView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
+            mapView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
             mapView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             mapView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             mapView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -38),
@@ -191,22 +114,19 @@ class OrganizationDetailsViewController: UIViewController {
         ])
     }
     
-//    private var showAdoptButton: Bool {
-//        if animal.contact.email != nil {
-//            return true
-//        } else if animal.contact.phone != nil {
-//            return true
-//        }
-//        return false
-//    }
+    private var showAdoptButton: Bool {
+        if organization.email != nil {
+            return true
+        } else if organization.phone != nil {
+            return true
+        }
+        return false
+    }
     
     func fillView() {
-        photoCollectionView.isHidden = organization.photos.isEmpty
-        photoPageControl.numberOfPages = organization.photos.count
-        photoPageControl.isHidden = organization.photos.count <= 1
         nameLabel.text = organization.name
-        descriptionLabel.text = organization.description
-//        adoptButton.isHidden = !showAdoptButton
+        descriptionLabel.text = organization.mission_statement
+        adoptButton.isHidden = !showAdoptButton
 //        if let fullAddress = organization.contact.address.fullAddress {
 //            mapView.isHidden = false
 //            showAddressOnMap(fullAddress)
@@ -245,44 +165,43 @@ class OrganizationDetailsViewController: UIViewController {
 //        }
 //    }
 //    
-//    @objc func showContactMenu() {
-//        
-//        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-//        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-//        
-//        if let phoneNumber = animal.contact.phone {
-//            let callAction = UIAlertAction(title: "Call \(phoneNumber)", style: .default) { _ in
-//                if let phoneURL = URL(string: "tel://\(phoneNumber)"),
-//                   UIApplication.shared.canOpenURL(phoneURL) {
-//                    UIApplication.shared.open(phoneURL)
-//                } else {
-//                    print("Cannot make a call.")
-//                }
-//            }
-//            
-//            alert.addAction(callAction)
-//        }
-//        
-//        if let emailAddress = animal.contact.email {
-//            let emailAction = UIAlertAction(title: "Email \(emailAddress)", style: .default) { _ in
-//                if MFMailComposeViewController.canSendMail() {
-//                    let mailVC = MFMailComposeViewController()
-//                    mailVC.mailComposeDelegate = self
-//                    mailVC.setToRecipients([emailAddress])
-//                    mailVC.setSubject("Adopt \(self.animal.name)")
-//                    mailVC.setMessageBody("Hi there,", isHTML: false)
-//                    self.present(mailVC, animated: true)
-//                } else {
-//                    print("Cannot send email. Configure an email account.")
-//                }
-//            }
-//            alert.addAction(emailAction)
-//        }
-//        
-//        alert.addAction(cancelAction)
-//        
-//        present(alert, animated: true, completion: nil)
-//    }
+    @objc func showContactMenu() {
+        
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        if let phoneNumber = organization.phone {
+            let callAction = UIAlertAction(title: "Call \(phoneNumber)", style: .default) { _ in
+                if let phoneURL = URL(string: "tel://\(phoneNumber)"),
+                   UIApplication.shared.canOpenURL(phoneURL) {
+                    UIApplication.shared.open(phoneURL)
+                } else {
+                    print("Cannot make a call.")
+                }
+            }
+            
+            alert.addAction(callAction)
+        }
+        
+        if let emailAddress = organization.email {
+            let emailAction = UIAlertAction(title: "Email \(emailAddress)", style: .default) { _ in
+                if MFMailComposeViewController.canSendMail() {
+                    let mailVC = MFMailComposeViewController()
+                    mailVC.mailComposeDelegate = self
+                    mailVC.setToRecipients([emailAddress])
+                    mailVC.setMessageBody("Hi there,", isHTML: false)
+                    self.present(mailVC, animated: true)
+                } else {
+                    print("Cannot send email. Configure an email account.")
+                }
+            }
+            alert.addAction(emailAction)
+        }
+        
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
 //    
 //    @objc func horizontalStackViewTapped() {
 //        let newVC = AnimalListViewController()
@@ -292,51 +211,30 @@ class OrganizationDetailsViewController: UIViewController {
 
 // MARK: - MFMailComposeViewControllerDelegate
 
-//extension OrganizationDetailsViewController: MFMailComposeViewControllerDelegate {
-//    func mailComposeController(
-//        _ controller: MFMailComposeViewController,
-//        didFinishWith result: MFMailComposeResult,
-//        error: Error?
-//    ) {
-//        controller.dismiss(animated: true)
+extension OrganizationDetailsViewController: MFMailComposeViewControllerDelegate {
+    func mailComposeController(
+        _ controller: MFMailComposeViewController,
+        didFinishWith result: MFMailComposeResult,
+        error: Error?
+    ) {
+        controller.dismiss(animated: true)
+    }
+}
+//
+//// MARK: - UICollectionViewDataSource
+//
+//extension OrganizationDetailsViewController: UICollectionViewDataSource {
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        organization.photos.count
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "carouselImageCell", for: indexPath) as! AnimalCarouselImageCell
+//        imageLoader.obtainImageWithPath(imagePath: organization.photos[indexPath.row].medium) { (image) in
+//            cell.photoImageView.image = image
+//        }
+////        cell.configure(with: UIImage(named: images[indexPath.item]))
+//        return cell
 //    }
 //}
-
-// MARK: - UICollectionViewDataSource
-
-extension OrganizationDetailsViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        organization.photos.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "carouselImageCell", for: indexPath) as! AnimalCarouselImageCell
-        imageLoader.obtainImageWithPath(imagePath: organization.photos[indexPath.row].medium) { (image) in
-            cell.photoImageView.image = image
-        }
-//        cell.configure(with: UIImage(named: images[indexPath.item]))
-        return cell
-    }
-}
-
-// MARK: - UICollectionViewDelegateFlowLayout
-
-extension OrganizationDetailsViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath) -> CGSize {
-            return collectionView.bounds.size
-    }
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let pageWidth = scrollView.frame.width
-        guard pageWidth > 0 else { return }
-
-        let fractionalPage = scrollView.contentOffset.x / pageWidth
-        let currentPage = Int(round(fractionalPage))
-
-        photoPageControl.currentPage = max(0, min(currentPage, photoPageControl.numberOfPages - 1))
-    }
-}
 

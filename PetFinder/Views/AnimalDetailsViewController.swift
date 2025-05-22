@@ -299,7 +299,8 @@ class AnimalDetailsViewController: UIViewController {
     }
     
     @objc func horizontalStackViewTapped() {
-        let newVC = OrganizationDetailsViewController(organization: viewModel.organization!.organization)
+        guard let organization = viewModel.organization else { return }
+        let newVC = OrganizationDetailsViewController(organization: organization.organization)
         navigationController?.pushViewController(newVC, animated: true)
     }
 }
