@@ -1,8 +1,8 @@
 //
-//  AnimalDetailsViewController.swift
+//  OrganizationDetailsViewController.swift
 //  PetFinder
 //
-//  Created by Kotya on 09/05/2025.
+//  Created by Kotya on 22/05/2025.
 //
 
 import Foundation
@@ -11,21 +11,16 @@ import MessageUI
 import UIKit
 import Combine
 
-class AnimalDetailsViewController: UIViewController {
+class OrganizationDetailsViewController: UIViewController {
     
-    private let animal: Animal
+    private let organization: Organization
     let imageLoader = ImageLoader()
     
-    private var cancellables: Set<AnyCancellable> = []
-
-    init(animal: Animal) {
-        self.animal = animal
-        self.viewModel = AnimalDetailsViewModel(id: animal.organization_id)
+    init(organization: Organization) {
+        self.organization = organization
         super.init(nibName: nil, bundle: nil)
     }
     
-    private let viewModel: AnimalDetailsViewModel
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -81,7 +76,7 @@ class AnimalDetailsViewController: UIViewController {
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 8
         button.heightAnchor.constraint(equalToConstant: 56).isActive = true
-        button.addTarget(self, action: #selector(showContactMenu), for: .touchUpInside)
+//        button.addTarget(self, action: #selector(showContactMenu), for: .touchUpInside)
         button.isHidden = true
         return button
     }()
@@ -100,15 +95,6 @@ class AnimalDetailsViewController: UIViewController {
         view.backgroundColor = .white
         setupView()
         fillView()
-        
-        viewModel.objectWillChange
-            .receive(on: RunLoop.main)
-            .sink { [weak self] in
-                self?.organizationNameLabel.text = self?.viewModel.organization?.organization.name
-                self?.imageLoader.obtainImageWithPath(imagePath: self?.viewModel.organization?.organization.photos.first?.medium ?? "") { (image) in
-                    self?.organizationLogo.image = image
-                }
-        }.store(in: &cancellables)
     }
     
     private func prepareCollectionView() {
@@ -149,9 +135,9 @@ class AnimalDetailsViewController: UIViewController {
         horizontalStackView.clipsToBounds = true
         
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(horizontalStackViewTapped))
-        horizontalStackView.isUserInteractionEnabled = true
-        horizontalStackView.addGestureRecognizer(tapGesture)
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(horizontalStackViewTapped))
+//        horizontalStackView.isUserInteractionEnabled = true
+//        horizontalStackView.addGestureRecognizer(tapGesture)
         
         contentView.addSubview(photoCollectionView)
         contentView.addSubview(photoPageControl)
@@ -205,127 +191,127 @@ class AnimalDetailsViewController: UIViewController {
         ])
     }
     
-    private var showAdoptButton: Bool {
-        if animal.contact.email != nil {
-            return true
-        } else if animal.contact.phone != nil {
-            return true
-        }
-        return false
-    }
+//    private var showAdoptButton: Bool {
+//        if animal.contact.email != nil {
+//            return true
+//        } else if animal.contact.phone != nil {
+//            return true
+//        }
+//        return false
+//    }
     
     func fillView() {
-        photoCollectionView.isHidden = animal.photos.isEmpty
-        photoPageControl.numberOfPages = animal.photos.count
-        photoPageControl.isHidden = animal.photos.count <= 1
-        nameLabel.text = animal.name
-        descriptionLabel.text = animal.description
-        adoptButton.isHidden = !showAdoptButton
-        if let fullAddress = animal.contact.address.fullAddress {
-            mapView.isHidden = false
-            showAddressOnMap(fullAddress)
-        }   
+        photoCollectionView.isHidden = organization.photos.isEmpty
+        photoPageControl.numberOfPages = organization.photos.count
+        photoPageControl.isHidden = organization.photos.count <= 1
+        nameLabel.text = organization.name
+        descriptionLabel.text = organization.description
+//        adoptButton.isHidden = !showAdoptButton
+//        if let fullAddress = organization.contact.address.fullAddress {
+//            mapView.isHidden = false
+//            showAddressOnMap(fullAddress)
+//        }   
     }
     
-    func showAddressOnMap(_ address: String?) {
-        guard let address = address else { return }
-        let geocoder = CLGeocoder()
-            
-        geocoder.geocodeAddressString(address) { [weak self] placemarks, error in
-            guard let self = self else { return }
-                
-            if let error = error {
-                print("Geocoding failed: \(error.localizedDescription)")
-                return
-            }
-                
-            guard let placemark = placemarks?.first,
-                let location = placemark.location else {
-                print("No matching location found")
-                return
-            }
-                
-            let coordinate = location.coordinate
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
-            annotation.title = address
-                
-            self.mapView.addAnnotation(annotation)
-            self.mapView.setRegion(MKCoordinateRegion(
-                center: coordinate,
-                latitudinalMeters: 1000,
-                longitudinalMeters: 1000
-            ), animated: true)
-        }
-    }
-    
-    @objc func showContactMenu() {
-        
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        
-        if let phoneNumber = animal.contact.phone {
-            let callAction = UIAlertAction(title: "Call \(phoneNumber)", style: .default) { _ in
-                if let phoneURL = URL(string: "tel://\(phoneNumber)"),
-                   UIApplication.shared.canOpenURL(phoneURL) {
-                    UIApplication.shared.open(phoneURL)
-                } else {
-                    print("Cannot make a call.")
-                }
-            }
-            
-            alert.addAction(callAction)
-        }
-        
-        if let emailAddress = animal.contact.email {
-            let emailAction = UIAlertAction(title: "Email \(emailAddress)", style: .default) { _ in
-                if MFMailComposeViewController.canSendMail() {
-                    let mailVC = MFMailComposeViewController()
-                    mailVC.mailComposeDelegate = self
-                    mailVC.setToRecipients([emailAddress])
-                    mailVC.setSubject("Adopt \(self.animal.name)")
-                    mailVC.setMessageBody("Hi there,", isHTML: false)
-                    self.present(mailVC, animated: true)
-                } else {
-                    print("Cannot send email. Configure an email account.")
-                }
-            }
-            alert.addAction(emailAction)
-        }
-        
-        alert.addAction(cancelAction)
-        
-        present(alert, animated: true, completion: nil)
-    }
-    
-    @objc func horizontalStackViewTapped() {
-        let newVC = OrganizationDetailsViewController(organization: viewModel.organization!.organization)
-        navigationController?.pushViewController(newVC, animated: true)
-    }
+//    func showAddressOnMap(_ address: String?) {
+//        guard let address = address else { return }
+//        let geocoder = CLGeocoder()
+//            
+//        geocoder.geocodeAddressString(address) { [weak self] placemarks, error in
+//            guard let self = self else { return }
+//                
+//            if let error = error {
+//                print("Geocoding failed: \(error.localizedDescription)")
+//                return
+//            }
+//                
+//            guard let placemark = placemarks?.first,
+//                let location = placemark.location else {
+//                print("No matching location found")
+//                return
+//            }
+//                
+//            let coordinate = location.coordinate
+//            let annotation = MKPointAnnotation()
+//            annotation.coordinate = coordinate
+//            annotation.title = address
+//                
+//            self.mapView.addAnnotation(annotation)
+//            self.mapView.setRegion(MKCoordinateRegion(
+//                center: coordinate,
+//                latitudinalMeters: 1000,
+//                longitudinalMeters: 1000
+//            ), animated: true)
+//        }
+//    }
+//    
+//    @objc func showContactMenu() {
+//        
+//        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+//        
+//        if let phoneNumber = animal.contact.phone {
+//            let callAction = UIAlertAction(title: "Call \(phoneNumber)", style: .default) { _ in
+//                if let phoneURL = URL(string: "tel://\(phoneNumber)"),
+//                   UIApplication.shared.canOpenURL(phoneURL) {
+//                    UIApplication.shared.open(phoneURL)
+//                } else {
+//                    print("Cannot make a call.")
+//                }
+//            }
+//            
+//            alert.addAction(callAction)
+//        }
+//        
+//        if let emailAddress = animal.contact.email {
+//            let emailAction = UIAlertAction(title: "Email \(emailAddress)", style: .default) { _ in
+//                if MFMailComposeViewController.canSendMail() {
+//                    let mailVC = MFMailComposeViewController()
+//                    mailVC.mailComposeDelegate = self
+//                    mailVC.setToRecipients([emailAddress])
+//                    mailVC.setSubject("Adopt \(self.animal.name)")
+//                    mailVC.setMessageBody("Hi there,", isHTML: false)
+//                    self.present(mailVC, animated: true)
+//                } else {
+//                    print("Cannot send email. Configure an email account.")
+//                }
+//            }
+//            alert.addAction(emailAction)
+//        }
+//        
+//        alert.addAction(cancelAction)
+//        
+//        present(alert, animated: true, completion: nil)
+//    }
+//    
+//    @objc func horizontalStackViewTapped() {
+//        let newVC = AnimalListViewController()
+//        navigationController?.pushViewController(newVC, animated: true)
+//    }
 }
 
 // MARK: - MFMailComposeViewControllerDelegate
 
-extension AnimalDetailsViewController: MFMailComposeViewControllerDelegate {
-    func mailComposeController(
-        _ controller: MFMailComposeViewController,
-        didFinishWith result: MFMailComposeResult,
-        error: Error?
-    ) {
-        controller.dismiss(animated: true)
-    }
-}
+//extension OrganizationDetailsViewController: MFMailComposeViewControllerDelegate {
+//    func mailComposeController(
+//        _ controller: MFMailComposeViewController,
+//        didFinishWith result: MFMailComposeResult,
+//        error: Error?
+//    ) {
+//        controller.dismiss(animated: true)
+//    }
+//}
 
 // MARK: - UICollectionViewDataSource
 
-extension AnimalDetailsViewController: UICollectionViewDataSource {
+extension OrganizationDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        animal.photos.count
+        organization.photos.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "carouselImageCell", for: indexPath) as! AnimalCarouselImageCell
-        imageLoader.obtainImageWithPath(imagePath: animal.photos[indexPath.row].medium) { (image) in
+        imageLoader.obtainImageWithPath(imagePath: organization.photos[indexPath.row].medium) { (image) in
             cell.photoImageView.image = image
         }
 //        cell.configure(with: UIImage(named: images[indexPath.item]))
@@ -335,7 +321,7 @@ extension AnimalDetailsViewController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
-extension AnimalDetailsViewController: UICollectionViewDelegateFlowLayout {
+extension OrganizationDetailsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
