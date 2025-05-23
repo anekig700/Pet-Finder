@@ -14,13 +14,13 @@ final class AnimalViewControllerViewModel: ObservableObject {
 
     private let service: AnimalServiceProtocol
 
-    init(service: AnimalServiceProtocol = AnimalService()) {
+    init(service: AnimalServiceProtocol = AnimalService(), query: String? = nil) {
         self.service = service
 
-        retrieveAnimals()
+        retrieveAnimals(with: query)
     }
 
-    private func retrieveAnimals() {
+    private func retrieveAnimals(with query: String? = nil) {
         service.fetchInfo(path: Endpoint.animals.rawValue) { [weak self] (result: Result<Animals, Error>) in
             switch result {
             case .success(let animals):

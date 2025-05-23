@@ -78,7 +78,7 @@ class AnimalDetailsViewController: UIViewController {
     
     let chevron: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "chevron.right")
+        imageView.image = UIImage(systemName: "chevron.right.square.fill")
         imageView.tintColor = .systemBlue
         imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true

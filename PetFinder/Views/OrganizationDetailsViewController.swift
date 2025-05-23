@@ -16,8 +16,11 @@ class OrganizationDetailsViewController: UIViewController {
     private let organization: Organization
     let imageLoader = ImageLoader()
     
+    private var cancellables: Set<AnyCancellable> = []
+    
     init(organization: Organization) {
         self.organization = organization
+        self.viewModel = AnimalViewControllerViewModel(query: "?organization=\(organization.id)")
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -25,8 +28,11 @@ class OrganizationDetailsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private let viewModel: AnimalViewControllerViewModel
+    
     private var scrollView = UIScrollView()
     private var contentView = UIView()
+    private var animalCollectionView: UICollectionView!
     
     let nameLabel: UILabel = {
         let label = UILabel()
@@ -99,12 +105,36 @@ class OrganizationDetailsViewController: UIViewController {
         view.backgroundColor = .white
         setupView()
         fillView()
+        
+        viewModel.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] in
+            self?.animalCollectionView.reloadData()
+        }.store(in: &cancellables)
+    }
+    
+    private func prepareCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.itemSize = CGSize(width: view.frame.width - 32, height: 150)
+//        let totalHeight = 150 * viewModel.animals.count
+        
+        animalCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+//        animalCollectionView.layer.cornerRadius = 8
+//        animalCollectionView.heightAnchor.constraint(equalToConstant: CGFloat(totalHeight)).isActive = true
+        animalCollectionView.backgroundColor = .clear
+//        animalCollectionView.isHidden = true
+        animalCollectionView.register(AnimalCollectionViewCell.self, forCellWithReuseIdentifier: "animalCollectionViewCell")
+        animalCollectionView.dataSource = self
+//        animalCollectionView.delegate = self
     }
 
     func setupView() {
         
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
+//        view.addSubview(scrollView)
+//        scrollView.addSubview(contentView)
+        
+        prepareCollectionView()
         
         let horizontalStackView = UIStackView(arrangedSubviews: [
             webLabel,
@@ -119,43 +149,48 @@ class OrganizationDetailsViewController: UIViewController {
         horizontalStackView.isUserInteractionEnabled = true
         horizontalStackView.addGestureRecognizer(tapGesture)
         
-        contentView.addSubview(nameLabel)
-        contentView.addSubview(descriptionLabel)
-        contentView.addSubview(horizontalStackView)
-        contentView.addSubview(mapView)
+        view.addSubview(nameLabel)
+        view.addSubview(descriptionLabel)
+        view.addSubview(horizontalStackView)
+        view.addSubview(mapView)
+        view.addSubview(animalCollectionView)
         view.addSubview(adoptButton)
         view.bringSubviewToFront(adoptButton)
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.translatesAutoresizingMaskIntoConstraints = false
+//        scrollView.translatesAutoresizingMaskIntoConstraints = false
+//        contentView.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         adoptButton.translatesAutoresizingMaskIntoConstraints = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
         horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
+        animalCollectionView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+//            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+//            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+//            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+//            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+//            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+//            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+//            contentView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
-            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             horizontalStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 8),
-            horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            horizontalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            horizontalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             mapView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-            mapView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            mapView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            mapView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -38),
+            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            animalCollectionView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
+            animalCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            animalCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            animalCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -38),
             adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
@@ -270,21 +305,33 @@ extension OrganizationDetailsViewController: MFMailComposeViewControllerDelegate
         controller.dismiss(animated: true)
     }
 }
-//
-//// MARK: - UICollectionViewDataSource
-//
-//extension OrganizationDetailsViewController: UICollectionViewDataSource {
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        organization.photos.count
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "carouselImageCell", for: indexPath) as! AnimalCarouselImageCell
-//        imageLoader.obtainImageWithPath(imagePath: organization.photos[indexPath.row].medium) { (image) in
-//            cell.photoImageView.image = image
-//        }
-////        cell.configure(with: UIImage(named: images[indexPath.item]))
-//        return cell
-//    }
-//}
+
+// MARK: - UICollectionViewDataSource
+
+extension OrganizationDetailsViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        viewModel.animals.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "animalCollectionViewCell", for: indexPath) as! AnimalCollectionViewCell
+        cell.nameLabel.text = viewModel.animals[indexPath.row].name
+        imageLoader.obtainImageWithPath(imagePath: viewModel.animals[indexPath.row].photos.first?.medium ?? "") { (image) in
+            if let updateCell = collectionView.cellForItem(at: indexPath) as? AnimalCollectionViewCell {
+                updateCell.photoImageView.image = image
+            }
+        }
+//        cell.configure(with: UIImage(named: images[indexPath.item]))
+        return cell
+    }
+}
+
+extension OrganizationDetailsViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath) -> CGSize {
+            return collectionView.bounds.size
+    }
+}
 
