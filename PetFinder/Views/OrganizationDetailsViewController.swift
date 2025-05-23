@@ -32,7 +32,37 @@ class OrganizationDetailsViewController: UIViewController {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .bold)
         label.textColor = .tertiaryLabel
+        label.numberOfLines = 0
+        label.lineBreakStrategy = .hangulWordPriority
         return label
+    }()
+    
+    let webLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .systemBlue
+        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.textColor = .systemBlue
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return label
+    }()
+    
+    let icon: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "arrow.up.forward.app")
+        imageView.tintColor = .systemBlue
+        imageView.contentMode = .scaleAspectFit
+        imageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        imageView.setContentHuggingPriority(.required, for: .horizontal)
+        imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return imageView
+    }()
+    
+    let spacer: UIView = {
+        let view = UIView()
+        view.widthAnchor.constraint(greaterThanOrEqualToConstant: 2).isActive = true
+        return view
     }()
     
     let descriptionLabel: UILabel = {
@@ -76,8 +106,22 @@ class OrganizationDetailsViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
+        let horizontalStackView = UIStackView(arrangedSubviews: [
+            webLabel,
+            icon,
+            spacer
+        ])
+        horizontalStackView.axis = .horizontal
+        horizontalStackView.spacing = 6
+        horizontalStackView.alignment = .center
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(horizontalStackViewTapped))
+        horizontalStackView.isUserInteractionEnabled = true
+        horizontalStackView.addGestureRecognizer(tapGesture)
+        
         contentView.addSubview(nameLabel)
         contentView.addSubview(descriptionLabel)
+        contentView.addSubview(horizontalStackView)
         contentView.addSubview(mapView)
         view.addSubview(adoptButton)
         view.bringSubviewToFront(adoptButton)
@@ -87,6 +131,7 @@ class OrganizationDetailsViewController: UIViewController {
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         adoptButton.translatesAutoresizingMaskIntoConstraints = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
+        horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -104,6 +149,9 @@ class OrganizationDetailsViewController: UIViewController {
             descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
             descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            horizontalStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 8),
+            horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             mapView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
             mapView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             mapView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
@@ -127,6 +175,7 @@ class OrganizationDetailsViewController: UIViewController {
         nameLabel.text = organization.name
         descriptionLabel.text = organization.mission_statement
         adoptButton.isHidden = !showAdoptButton
+        webLabel.text = organization.website
 //        if let fullAddress = organization.contact.address.fullAddress {
 //            mapView.isHidden = false
 //            showAddressOnMap(fullAddress)
@@ -202,11 +251,12 @@ class OrganizationDetailsViewController: UIViewController {
         
         present(alert, animated: true, completion: nil)
     }
-//    
-//    @objc func horizontalStackViewTapped() {
-//        let newVC = AnimalListViewController()
-//        navigationController?.pushViewController(newVC, animated: true)
-//    }
+    
+    @objc func horizontalStackViewTapped() {
+        if let url = URL(string: webLabel.text!) {
+            UIApplication.shared.open(url)
+        }
+    }
 }
 
 // MARK: - MFMailComposeViewControllerDelegate

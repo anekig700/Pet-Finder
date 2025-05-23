@@ -61,7 +61,9 @@ class AnimalDetailsViewController: UIViewController {
     var organizationNameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .secondaryLabel
+        label.textColor = .systemBlue
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
     
@@ -77,7 +79,7 @@ class AnimalDetailsViewController: UIViewController {
     let chevron: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "chevron.right")
-        imageView.tintColor = UIColor.tertiaryLabel
+        imageView.tintColor = .systemBlue
         imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
         imageView.setContentHuggingPriority(.required, for: .horizontal)
@@ -87,7 +89,6 @@ class AnimalDetailsViewController: UIViewController {
     
     let spacer: UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalToConstant: 4).isActive = true
         return view
     }()
