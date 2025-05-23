@@ -74,6 +74,24 @@ class AnimalDetailsViewController: UIViewController {
         return imageView
     }()
     
+    let chevron: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "chevron.right")
+        imageView.tintColor = UIColor.tertiaryLabel
+        imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        imageView.setContentHuggingPriority(.required, for: .horizontal)
+        imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return imageView
+    }()
+    
+    let spacer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.widthAnchor.constraint(equalToConstant: 4).isActive = true
+        return view
+    }()
+    
     let adoptButton: UIButton = {
         let button = UIButton()
         button.setTitle("Contact Organization", for: .normal)
@@ -138,9 +156,12 @@ class AnimalDetailsViewController: UIViewController {
         
         let horizontalStackView = UIStackView(arrangedSubviews: [
             organizationLogo,
-            organizationNameLabel
+            organizationNameLabel,
+            chevron,
+            spacer
         ])
-        horizontalStackView.distribution = .fillProportionally
+        horizontalStackView.alignment = .center
+        horizontalStackView.distribution = .fill
         horizontalStackView.axis = .horizontal
         horizontalStackView.spacing = 16
         horizontalStackView.layer.borderWidth = 1.0
