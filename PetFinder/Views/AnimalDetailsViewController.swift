@@ -61,7 +61,7 @@ class AnimalDetailsViewController: UIViewController {
     var organizationNameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .systemBlue
+        label.textColor = .black
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
@@ -78,10 +78,10 @@ class AnimalDetailsViewController: UIViewController {
     
     let chevron: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "chevron.right.square.fill")
-        imageView.tintColor = .systemBlue
+        imageView.image = UIImage(systemName: "chevron.right")
+        imageView.tintColor = .black
         imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
         imageView.setContentHuggingPriority(.required, for: .horizontal)
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         return imageView
@@ -116,7 +116,7 @@ class AnimalDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .tertiarySystemGroupedBackground
         setupView()
         fillView()
         
@@ -167,7 +167,8 @@ class AnimalDetailsViewController: UIViewController {
         horizontalStackView.spacing = 16
         horizontalStackView.layer.borderWidth = 1.0
         horizontalStackView.layer.borderColor = UIColor.lightGray.cgColor
-        horizontalStackView.layer.cornerRadius = 8
+        horizontalStackView.backgroundColor = .white
+        horizontalStackView.layer.cornerRadius = 16
         horizontalStackView.clipsToBounds = true
         
         
