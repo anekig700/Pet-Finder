@@ -36,15 +36,15 @@ class AnimalDetailsViewController: UIViewController {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 20, weight: .bold)
-        label.textColor = .tertiaryLabel
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.textColor = .black
         return label
     }()
     
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .secondaryLabel
+        label.font = .systemFont(ofSize: 14, weight: .regular)
+        label.textColor = .black
         label.lineBreakStrategy = .pushOut
         label.numberOfLines = 0
         return label
@@ -52,15 +52,18 @@ class AnimalDetailsViewController: UIViewController {
     
     let mapView : MKMapView = {
         let map = MKMapView()
-        map.layer.cornerRadius = 8
+        map.layer.cornerRadius = 16
         map.heightAnchor.constraint(equalToConstant: 150).isActive = true
         map.isHidden = true
+        map.layer.shadowColor = UIColor.black.cgColor
+        map.layer.shadowOpacity = 0.1
+        map.layer.shadowRadius = 8
         return map
     }()
     
     var organizationNameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.font = .systemFont(ofSize: 14, weight: .regular)
         label.textColor = .black
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -70,9 +73,12 @@ class AnimalDetailsViewController: UIViewController {
     let organizationLogo: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.layer.cornerRadius = 8
-        imageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
+        imageView.layer.cornerRadius = 16
+        imageView.clipsToBounds = true
+        imageView.layer.borderColor = UIColor.systemGray4.cgColor
+        imageView.layer.borderWidth = 1
+        imageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 32).isActive = true
         return imageView
     }()
     
@@ -80,16 +86,22 @@ class AnimalDetailsViewController: UIViewController {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "chevron.right")
         imageView.tintColor = .black
-        imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
         imageView.setContentHuggingPriority(.required, for: .horizontal)
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         return imageView
     }()
     
-    let spacer: UIView = {
+    let leftSpacer: UIView = {
         let view = UIView()
-        view.widthAnchor.constraint(equalToConstant: 4).isActive = true
+        view.widthAnchor.constraint(equalToConstant: 8).isActive = true
+        return view
+    }()
+    
+    let rightSpacer: UIView = {
+        let view = UIView()
+        view.widthAnchor.constraint(equalToConstant: 8).isActive = true
         return view
     }()
     
@@ -98,7 +110,7 @@ class AnimalDetailsViewController: UIViewController {
         button.setTitle("Contact Organization", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 8
+        button.layer.cornerRadius = 12
         button.heightAnchor.constraint(equalToConstant: 56).isActive = true
         button.addTarget(self, action: #selector(showContactMenu), for: .touchUpInside)
         button.isHidden = true
@@ -117,6 +129,13 @@ class AnimalDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .tertiarySystemGroupedBackground
+        self.title = "Animal Details"
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor.white
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
         setupView()
         fillView()
         
@@ -137,7 +156,7 @@ class AnimalDetailsViewController: UIViewController {
         layout.minimumInteritemSpacing = 0
         
         photoCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        photoCollectionView.layer.cornerRadius = 8
+        photoCollectionView.layer.cornerRadius = 16
         photoCollectionView.isPagingEnabled = true
         photoCollectionView.showsHorizontalScrollIndicator = false
         photoCollectionView.heightAnchor.constraint(equalToConstant: 300).isActive = true
@@ -156,17 +175,16 @@ class AnimalDetailsViewController: UIViewController {
         prepareCollectionView()
         
         let horizontalStackView = UIStackView(arrangedSubviews: [
+            leftSpacer,
             organizationLogo,
             organizationNameLabel,
             chevron,
-            spacer
+            rightSpacer
         ])
         horizontalStackView.alignment = .center
         horizontalStackView.distribution = .fill
         horizontalStackView.axis = .horizontal
-        horizontalStackView.spacing = 16
-        horizontalStackView.layer.borderWidth = 1.0
-        horizontalStackView.layer.borderColor = UIColor.lightGray.cgColor
+        horizontalStackView.spacing = 8
         horizontalStackView.backgroundColor = .white
         horizontalStackView.layer.cornerRadius = 16
         horizontalStackView.clipsToBounds = true
@@ -204,26 +222,27 @@ class AnimalDetailsViewController: UIViewController {
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            photoCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            photoCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            photoCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            photoCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            photoCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            photoCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             photoPageControl.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 4),
             photoPageControl.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             nameLabel.topAnchor.constraint(equalTo: photoPageControl.bottomAnchor, constant: 4),
-            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
-            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             horizontalStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-            horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            horizontalStackView.heightAnchor.constraint(equalToConstant: 49),
             mapView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
-            mapView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            mapView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            mapView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            mapView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             mapView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -38),
-            adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
         ])
     }
