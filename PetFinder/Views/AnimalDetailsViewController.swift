@@ -189,6 +189,18 @@ class AnimalDetailsViewController: UIViewController {
         horizontalStackView.layer.cornerRadius = 16
         horizontalStackView.clipsToBounds = true
         
+        let verticalStackView = UIStackView(arrangedSubviews: [
+            nameLabel,
+            descriptionLabel,
+        ])
+        verticalStackView.alignment = .leading
+        verticalStackView.distribution = .fill
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 12
+        verticalStackView.backgroundColor = .white
+        verticalStackView.layer.cornerRadius = 16
+        verticalStackView.clipsToBounds = true
+        
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(horizontalStackViewTapped))
         horizontalStackView.isUserInteractionEnabled = true
@@ -196,8 +208,7 @@ class AnimalDetailsViewController: UIViewController {
         
         contentView.addSubview(photoCollectionView)
         contentView.addSubview(photoPageControl)
-        contentView.addSubview(nameLabel)
-        contentView.addSubview(descriptionLabel)
+        contentView.addSubview(verticalStackView)
         contentView.addSubview(mapView)
         contentView.addSubview(horizontalStackView)
         view.addSubview(adoptButton)
@@ -211,6 +222,7 @@ class AnimalDetailsViewController: UIViewController {
         adoptButton.translatesAutoresizingMaskIntoConstraints = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
         horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -225,15 +237,12 @@ class AnimalDetailsViewController: UIViewController {
             photoCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
             photoCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             photoCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            photoPageControl.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 4),
+            photoPageControl.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 10),
             photoPageControl.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            nameLabel.topAnchor.constraint(equalTo: photoPageControl.bottomAnchor, constant: 4),
-            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
-            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            horizontalStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
+            verticalStackView.topAnchor.constraint(equalTo: photoPageControl.bottomAnchor, constant: 10),
+            verticalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            verticalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            horizontalStackView.topAnchor.constraint(equalTo: verticalStackView.bottomAnchor, constant: 16),
             horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             horizontalStackView.heightAnchor.constraint(equalToConstant: 49),
