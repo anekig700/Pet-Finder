@@ -173,7 +173,7 @@ class AnimalDetailsViewController: UIViewController {
         scrollView.addSubview(contentView)
     
         prepareCollectionView()
-        
+                
         let horizontalStackView = UIStackView(arrangedSubviews: [
             leftSpacer,
             organizationLogo,
@@ -189,28 +189,38 @@ class AnimalDetailsViewController: UIViewController {
         horizontalStackView.layer.cornerRadius = 16
         horizontalStackView.clipsToBounds = true
         
-        let verticalStackView = UIStackView(arrangedSubviews: [
-            nameLabel,
-            descriptionLabel,
+        let verticalInfoContainer: UIView = {
+            let view = UIView()
+            view.addSubview(nameLabel)
+            view.addSubview(descriptionLabel)
+            view.layer.cornerRadius = 16
+            view.clipsToBounds = true
+            view.backgroundColor = .white
+            return view
+        }()
+        NSLayoutConstraint.activate([
+            nameLabel.topAnchor.constraint(equalTo: verticalInfoContainer.topAnchor, constant: 16),
+            nameLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: 16),
+            nameLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -16),
+            nameLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -12),
+            descriptionLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: 16),
+            descriptionLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -16),
+            descriptionLabel.bottomAnchor.constraint(equalTo: verticalInfoContainer.bottomAnchor, constant: -16),
         ])
-        verticalStackView.alignment = .leading
-        verticalStackView.distribution = .fill
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 12
-        verticalStackView.backgroundColor = .white
-        verticalStackView.layer.cornerRadius = 16
-        verticalStackView.clipsToBounds = true
-        
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(horizontalStackViewTapped))
         horizontalStackView.isUserInteractionEnabled = true
         horizontalStackView.addGestureRecognizer(tapGesture)
         
+        let animalInfoContainer = verticalInfoContainer.wrapInShadowContainer()
+        let organizationInfoContainer = horizontalStackView.wrapInShadowContainer()
+        let mapContainer = mapView.wrapInShadowContainer()
+        
         contentView.addSubview(photoCollectionView)
         contentView.addSubview(photoPageControl)
-        contentView.addSubview(verticalStackView)
-        contentView.addSubview(mapView)
-        contentView.addSubview(horizontalStackView)
+        contentView.addSubview(animalInfoContainer)
+        contentView.addSubview(mapContainer)
+        contentView.addSubview(organizationInfoContainer)
         view.addSubview(adoptButton)
         view.bringSubviewToFront(adoptButton)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -220,9 +230,9 @@ class AnimalDetailsViewController: UIViewController {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         adoptButton.translatesAutoresizingMaskIntoConstraints = false
-        mapView.translatesAutoresizingMaskIntoConstraints = false
-        horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
-        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+        mapContainer.translatesAutoresizingMaskIntoConstraints = false
+        organizationInfoContainer.translatesAutoresizingMaskIntoConstraints = false
+        animalInfoContainer.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -239,17 +249,17 @@ class AnimalDetailsViewController: UIViewController {
             photoCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             photoPageControl.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 10),
             photoPageControl.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            verticalStackView.topAnchor.constraint(equalTo: photoPageControl.bottomAnchor, constant: 10),
-            verticalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            verticalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            horizontalStackView.topAnchor.constraint(equalTo: verticalStackView.bottomAnchor, constant: 16),
-            horizontalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            horizontalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            horizontalStackView.heightAnchor.constraint(equalToConstant: 49),
-            mapView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
-            mapView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            mapView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            mapView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -38),
+            animalInfoContainer.topAnchor.constraint(equalTo: photoPageControl.bottomAnchor, constant: 10),
+            animalInfoContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            animalInfoContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            organizationInfoContainer.topAnchor.constraint(equalTo: verticalInfoContainer.bottomAnchor, constant: 16),
+            organizationInfoContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            organizationInfoContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            organizationInfoContainer.heightAnchor.constraint(equalToConstant: 49),
+            mapContainer.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
+            mapContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            mapContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            mapContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -38),
             adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
