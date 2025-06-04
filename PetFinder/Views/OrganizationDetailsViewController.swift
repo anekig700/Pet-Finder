@@ -36,8 +36,8 @@ class OrganizationDetailsViewController: UIViewController {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 20, weight: .bold)
-        label.textColor = .tertiaryLabel
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.textColor = .black
         label.numberOfLines = 0
         label.lineBreakStrategy = .hangulWordPriority
         return label
@@ -73,8 +73,8 @@ class OrganizationDetailsViewController: UIViewController {
     
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .secondaryLabel
+        label.font = .systemFont(ofSize: 14, weight: .regular)
+        label.textColor = .black
         label.lineBreakStrategy = .pushOut
         label.numberOfLines = 0
         return label
@@ -102,7 +102,14 @@ class OrganizationDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .tertiarySystemGroupedBackground
+        self.title = "Organization Details"
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor.white
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
         setupView()
         fillView()
         
@@ -131,6 +138,25 @@ class OrganizationDetailsViewController: UIViewController {
 
     func setupView() {
         
+        let verticalInfoContainer: UIView = {
+            let view = UIView()
+            view.addSubview(nameLabel)
+            view.addSubview(descriptionLabel)
+            view.layer.cornerRadius = 16
+            view.clipsToBounds = true
+            view.backgroundColor = .white
+            return view
+        }()
+        NSLayoutConstraint.activate([
+            nameLabel.topAnchor.constraint(equalTo: verticalInfoContainer.topAnchor, constant: 16),
+            nameLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: 16),
+            nameLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -16),
+            nameLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -12),
+            descriptionLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: 16),
+            descriptionLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -16),
+            descriptionLabel.bottomAnchor.constraint(equalTo: verticalInfoContainer.bottomAnchor, constant: -16),
+        ])
+        
 //        view.addSubview(scrollView)
 //        scrollView.addSubview(contentView)
         
@@ -149,8 +175,11 @@ class OrganizationDetailsViewController: UIViewController {
         horizontalStackView.isUserInteractionEnabled = true
         horizontalStackView.addGestureRecognizer(tapGesture)
         
-        view.addSubview(nameLabel)
-        view.addSubview(descriptionLabel)
+        let organizationInfoContainer = verticalInfoContainer.wrapInShadowContainer()
+        
+        view.addSubview(organizationInfoContainer)
+//        view.addSubview(nameLabel)
+//        view.addSubview(descriptionLabel)
         view.addSubview(horizontalStackView)
         view.addSubview(mapView)
         view.addSubview(animalCollectionView)
@@ -158,6 +187,7 @@ class OrganizationDetailsViewController: UIViewController {
         view.bringSubviewToFront(adoptButton)
 //        scrollView.translatesAutoresizingMaskIntoConstraints = false
 //        contentView.translatesAutoresizingMaskIntoConstraints = false
+        organizationInfoContainer.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         adoptButton.translatesAutoresizingMaskIntoConstraints = false
@@ -175,16 +205,19 @@ class OrganizationDetailsViewController: UIViewController {
 //            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
 //            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
 //            contentView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            horizontalStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 8),
+//            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+//            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+//            nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+//            descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
+//            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+//            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            organizationInfoContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+            organizationInfoContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            organizationInfoContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            horizontalStackView.topAnchor.constraint(equalTo: organizationInfoContainer.bottomAnchor, constant: 8),
             horizontalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             horizontalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            mapView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
+            mapView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
             mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             animalCollectionView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
