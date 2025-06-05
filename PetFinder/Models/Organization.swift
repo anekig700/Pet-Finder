@@ -19,4 +19,5 @@ struct Organization: Codable {
     let phone: String?
     let mission_statement: String?
     let website: String?
+    let address: Address
 }

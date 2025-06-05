@@ -80,6 +80,16 @@ class OrganizationDetailsViewController: UIViewController {
         return label
     }()
     
+    let mapHeaderLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.textColor = .black
+        label.numberOfLines = 0
+        label.lineBreakStrategy = .hangulWordPriority
+        label.text = "How to find us"
+        return label
+    }()
+    
     let mapView : MKMapView = {
         let map = MKMapView()
         map.layer.cornerRadius = 8
@@ -157,11 +167,6 @@ class OrganizationDetailsViewController: UIViewController {
             descriptionLabel.bottomAnchor.constraint(equalTo: verticalInfoContainer.bottomAnchor, constant: -16),
         ])
         
-//        view.addSubview(scrollView)
-//        scrollView.addSubview(contentView)
-        
-        prepareCollectionView()
-        
         let horizontalStackView = UIStackView(arrangedSubviews: [
             webLabel,
             icon,
@@ -171,28 +176,58 @@ class OrganizationDetailsViewController: UIViewController {
         horizontalStackView.spacing = 6
         horizontalStackView.alignment = .center
         
+        let verticalMapContainer: UIView = {
+            let view = UIView()
+            view.addSubview(mapHeaderLabel)
+            view.addSubview(mapView)
+            view.addSubview(horizontalStackView)
+            view.layer.cornerRadius = 16
+            view.clipsToBounds = true
+            view.backgroundColor = .white
+            return view
+        }()
+        NSLayoutConstraint.activate([
+            mapHeaderLabel.topAnchor.constraint(equalTo: verticalMapContainer.topAnchor, constant: 16),
+            mapHeaderLabel.leadingAnchor.constraint(equalTo: verticalMapContainer.leadingAnchor, constant: 16),
+            mapHeaderLabel.trailingAnchor.constraint(equalTo: verticalMapContainer.trailingAnchor, constant: -16),
+            mapHeaderLabel.bottomAnchor.constraint(equalTo: mapView.topAnchor, constant: -12),
+            mapView.leadingAnchor.constraint(equalTo: verticalMapContainer.leadingAnchor, constant: 16),
+            mapView.trailingAnchor.constraint(equalTo: verticalMapContainer.trailingAnchor, constant: -16),
+            mapView.bottomAnchor.constraint(equalTo: horizontalStackView.topAnchor, constant: -12),
+            horizontalStackView.leadingAnchor.constraint(equalTo: verticalMapContainer.leadingAnchor, constant: 16),
+            horizontalStackView.trailingAnchor.constraint(equalTo: verticalMapContainer.trailingAnchor, constant: -16),
+            horizontalStackView.bottomAnchor.constraint(equalTo: verticalMapContainer.bottomAnchor, constant: -16),
+        ])
+        
+        let organizationInfoContainer = verticalInfoContainer.wrapInShadowContainer()
+        let mapContainer = verticalMapContainer.wrapInShadowContainer()
+        
+//        view.addSubview(scrollView)
+//        scrollView.addSubview(contentView)
+        
+        prepareCollectionView()
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(horizontalStackViewTapped))
         horizontalStackView.isUserInteractionEnabled = true
         horizontalStackView.addGestureRecognizer(tapGesture)
         
-        let organizationInfoContainer = verticalInfoContainer.wrapInShadowContainer()
-        
         view.addSubview(organizationInfoContainer)
-//        view.addSubview(nameLabel)
-//        view.addSubview(descriptionLabel)
-        view.addSubview(horizontalStackView)
-        view.addSubview(mapView)
+        view.addSubview(mapContainer)
+//        view.addSubview(horizontalStackView)
+//        view.addSubview(mapView)
         view.addSubview(animalCollectionView)
         view.addSubview(adoptButton)
         view.bringSubviewToFront(adoptButton)
 //        scrollView.translatesAutoresizingMaskIntoConstraints = false
 //        contentView.translatesAutoresizingMaskIntoConstraints = false
         organizationInfoContainer.translatesAutoresizingMaskIntoConstraints = false
+        mapContainer.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         adoptButton.translatesAutoresizingMaskIntoConstraints = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
         horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
+        mapHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
         animalCollectionView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -205,22 +240,19 @@ class OrganizationDetailsViewController: UIViewController {
 //            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
 //            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
 //            contentView.widthAnchor.constraint(equalTo: view.widthAnchor),
-//            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-//            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//            nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-//            descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
-//            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             organizationInfoContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
             organizationInfoContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             organizationInfoContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            horizontalStackView.topAnchor.constraint(equalTo: organizationInfoContainer.bottomAnchor, constant: 8),
-            horizontalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            horizontalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            mapView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
-            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            animalCollectionView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
+            mapContainer.topAnchor.constraint(equalTo: organizationInfoContainer.bottomAnchor, constant: 8),
+            mapContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            mapContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+//            horizontalStackView.topAnchor.constraint(equalTo: organizationInfoContainer.bottomAnchor, constant: 8),
+//            horizontalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+//            horizontalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+//            mapView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
+//            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+//            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            animalCollectionView.topAnchor.constraint(equalTo: mapContainer.bottomAnchor, constant: 16),
             animalCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             animalCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             animalCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -38),
@@ -244,44 +276,44 @@ class OrganizationDetailsViewController: UIViewController {
         descriptionLabel.text = organization.mission_statement
         adoptButton.isHidden = !showAdoptButton
         webLabel.text = organization.website
-//        if let fullAddress = organization.contact.address.fullAddress {
-//            mapView.isHidden = false
-//            showAddressOnMap(fullAddress)
-//        }   
+        if let fullAddress = organization.address.fullAddress {
+            mapView.isHidden = false
+            showAddressOnMap(fullAddress)
+        }   
     }
     
-//    func showAddressOnMap(_ address: String?) {
-//        guard let address = address else { return }
-//        let geocoder = CLGeocoder()
-//            
-//        geocoder.geocodeAddressString(address) { [weak self] placemarks, error in
-//            guard let self = self else { return }
-//                
-//            if let error = error {
-//                print("Geocoding failed: \(error.localizedDescription)")
-//                return
-//            }
-//                
-//            guard let placemark = placemarks?.first,
-//                let location = placemark.location else {
-//                print("No matching location found")
-//                return
-//            }
-//                
-//            let coordinate = location.coordinate
-//            let annotation = MKPointAnnotation()
-//            annotation.coordinate = coordinate
-//            annotation.title = address
-//                
-//            self.mapView.addAnnotation(annotation)
-//            self.mapView.setRegion(MKCoordinateRegion(
-//                center: coordinate,
-//                latitudinalMeters: 1000,
-//                longitudinalMeters: 1000
-//            ), animated: true)
-//        }
-//    }
-//    
+    func showAddressOnMap(_ address: String?) {
+        guard let address = address else { return }
+        let geocoder = CLGeocoder()
+            
+        geocoder.geocodeAddressString(address) { [weak self] placemarks, error in
+            guard let self = self else { return }
+                
+            if let error = error {
+                print("Geocoding failed: \(error.localizedDescription)")
+                return
+            }
+                
+            guard let placemark = placemarks?.first,
+                let location = placemark.location else {
+                print("No matching location found")
+                return
+            }
+                
+            let coordinate = location.coordinate
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            annotation.title = address
+                
+            self.mapView.addAnnotation(annotation)
+            self.mapView.setRegion(MKCoordinateRegion(
+                center: coordinate,
+                latitudinalMeters: 1000,
+                longitudinalMeters: 1000
+            ), animated: true)
+        }
+    }
+    
     @objc func showContactMenu() {
         
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
