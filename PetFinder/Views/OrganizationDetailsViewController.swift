@@ -20,7 +20,7 @@ class OrganizationDetailsViewController: UIViewController {
     
     init(organization: Organization) {
         self.organization = organization
-        self.viewModel = AnimalViewControllerViewModel(query: "?organization=\(organization.id)")
+        self.viewModel = AnimalListViewModel(query: "?organization=\(organization.id)")
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -28,7 +28,7 @@ class OrganizationDetailsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private let viewModel: AnimalViewControllerViewModel
+    private let viewModel: AnimalListViewModel
     
     private var scrollView = UIScrollView()
     private var contentView = UIView()
@@ -375,13 +375,14 @@ extension OrganizationDetailsViewController: MFMailComposeViewControllerDelegate
 
 extension OrganizationDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.animals.count
+        viewModel.numberOfAnimals()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let animal = viewModel.animal(at: indexPath.row)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "animalCollectionViewCell", for: indexPath) as! AnimalCollectionViewCell
-        cell.nameLabel.text = viewModel.animals[indexPath.row].name
-        imageLoader.obtainImageWithPath(imagePath: viewModel.animals[indexPath.row].photos.first?.medium ?? "") { (image) in
+        cell.nameLabel.text = animal.name
+        imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { (image) in
             if let updateCell = collectionView.cellForItem(at: indexPath) as? AnimalCollectionViewCell {
                 updateCell.photoImageView.image = image
             }

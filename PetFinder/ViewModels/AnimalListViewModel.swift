@@ -1,5 +1,5 @@
 //
-//  AnimalViewControllerViewModel.swift
+//  AnimalListViewModel.swift
 //  PetFinder
 //
 //  Created by Kotya on 23/04/2025.
@@ -8,9 +8,9 @@
 import Combine
 import Foundation
 
-final class AnimalViewControllerViewModel: ObservableObject {
+final class AnimalListViewModel: ObservableObject {
 
-    @Published var animals: [Animal] = []
+    @Published private(set) var animals: [Animal] = []
 
     private let service: AnimalServiceProtocol
 
@@ -30,6 +30,15 @@ final class AnimalViewControllerViewModel: ObservableObject {
             }
         }
     }
+    
+    func numberOfAnimals() -> Int {
+        animals.count
+    }
+    
+    func animal(at index: Int) -> Animal {
+        animals[index]
+    }
+    
 }
 
 

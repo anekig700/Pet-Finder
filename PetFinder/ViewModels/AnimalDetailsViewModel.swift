@@ -10,7 +10,7 @@ import Foundation
 
 final class AnimalDetailsViewModel: ObservableObject {
 
-    @Published var organization: OrganizationDetails?
+    @Published private(set) var organizationDetails: OrganizationDetails?
 
     private let service: AnimalServiceProtocol
 
@@ -23,11 +23,15 @@ final class AnimalDetailsViewModel: ObservableObject {
         service.fetchInfo(path: Endpoint.organizations.rawValue + "/\(id)") { [weak self] (result: Result<OrganizationDetails, Error>) in
             switch result {
             case .success(let organization):
-                self?.organization = organization
+                self?.organizationDetails = organization
             case .failure(let error):
                 print("Error retrieving organization: \(error)")
             }
         }
+    }
+    
+    func organization() -> Organization {
+        organizationDetails!.organization
     }
 }
 

@@ -142,8 +142,8 @@ class AnimalDetailsViewController: UIViewController {
         viewModel.objectWillChange
             .receive(on: RunLoop.main)
             .sink { [weak self] in
-                self?.organizationNameLabel.text = self?.viewModel.organization?.organization.name
-                self?.imageLoader.obtainImageWithPath(imagePath: self?.viewModel.organization?.organization.photos.first?.medium ?? "") { (image) in
+                self?.organizationNameLabel.text = self?.viewModel.organization().name
+                self?.imageLoader.obtainImageWithPath(imagePath: self?.viewModel.organization().photos.first?.medium ?? "") { (image) in
                     self?.organizationLogo.image = image
                 }
         }.store(in: &cancellables)
@@ -360,7 +360,7 @@ class AnimalDetailsViewController: UIViewController {
     }
     
     @objc func horizontalStackViewTapped() {
-        guard let organization = viewModel.organization else { return }
+        guard let organization = viewModel.organizationDetails else { return }
         let newVC = OrganizationDetailsViewController(organization: organization.organization)
         navigationController?.pushViewController(newVC, animated: true)
     }

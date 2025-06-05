@@ -16,7 +16,7 @@ class AnimalListViewController: UIViewController {
     
     private var cancellables: Set<AnyCancellable> = []
     
-    private let viewModel = AnimalViewControllerViewModel()
+    private let viewModel = AnimalListViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,18 +50,18 @@ class AnimalListViewController: UIViewController {
 
 extension AnimalListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(viewModel.animals.count)
-        return viewModel.animals.count
+        return viewModel.numberOfAnimals()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let animal = viewModel.animal(at: indexPath.row)
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AnimalCell
-        cell.nameLabel.text = viewModel.animals[indexPath.row].name
-        cell.ageLabel.text = viewModel.animals[indexPath.row].age
-        cell.weightLabel.text = viewModel.animals[indexPath.row].size
-        cell.genderLabel.text = viewModel.animals[indexPath.row].gender
-        cell.breedLabel.text = viewModel.animals[indexPath.row].breeds.primary
-        imageLoader.obtainImageWithPath(imagePath: viewModel.animals[indexPath.row].photos.first?.medium ?? "") { (image) in
+        cell.nameLabel.text = animal.name
+        cell.ageLabel.text = animal.age
+        cell.weightLabel.text = animal.size
+        cell.genderLabel.text = animal.gender
+        cell.breedLabel.text = animal.breeds.primary
+        imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { (image) in
             if let updateCell = tableView.cellForRow(at: indexPath) as? AnimalCell {
                 updateCell.backgroundImage.image = image
             }
@@ -72,7 +72,8 @@ extension AnimalListViewController: UITableViewDataSource {
 
 extension AnimalListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let animal = viewModel.animal(at: indexPath.row)
         tableView.deselectRow(at: indexPath, animated: true)
-        navigationController?.pushViewController(AnimalDetailsViewController(animal: viewModel.animals[indexPath.row]), animated: false)
+        navigationController?.pushViewController(AnimalDetailsViewController(animal: animal), animated: false)
     }
 }
