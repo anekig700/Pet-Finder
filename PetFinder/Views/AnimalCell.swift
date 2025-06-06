@@ -9,6 +9,8 @@ import UIKit
 
 class AnimalCell: UITableViewCell {
     
+    let imageLoader = ImageLoader()
+    
     let backgroundImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -103,6 +105,18 @@ class AnimalCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(with animal: Animal) {
+        nameLabel.text = animal.name
+        ageLabel.text = animal.age
+        weightLabel.text = animal.size
+        genderLabel.text = animal.gender
+        breedLabel.text = animal.breeds.primary
+        
+        imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { [weak self] (image) in
+            self?.backgroundImage.image = image
+        }
     }
     
 //    override func setSelected(_ selected: Bool, animated: Bool) {

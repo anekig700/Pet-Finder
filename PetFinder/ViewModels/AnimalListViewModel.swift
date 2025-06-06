@@ -21,11 +21,12 @@ final class AnimalListViewModel: ObservableObject {
     }
 
     func retrieveAnimals(with query: String? = nil) {
-        service.fetchInfo(path: Endpoint.animals.rawValue) { [weak self] (result: Result<[Animal], Error>) in
+        service.fetchInfo(path: Endpoint.animals.rawValue) { [weak self] (result: Result<Animals, Error>) in
             switch result {
             case .success(let animals):
-                self?.animals = animals
+                self?.animals = animals.animals
             case .failure(let error):
+                self?.animals = []
                 print("Error retrieving animals: \(error)")
             }
         }

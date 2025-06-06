@@ -28,7 +28,8 @@ class AnimalListViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] in
             self?.tableView.reloadData()
-        }.store(in: &cancellables)
+            }
+            .store(in: &cancellables)
     }
 
     func setupTableView() {
@@ -54,26 +55,32 @@ extension AnimalListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let animal = viewModel.animal(at: indexPath.row)
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AnimalCell
-        cell.nameLabel.text = animal.name
-        cell.ageLabel.text = animal.age
-        cell.weightLabel.text = animal.size
-        cell.genderLabel.text = animal.gender
-        cell.breedLabel.text = animal.breeds.primary
-        imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { (image) in
-            if let updateCell = tableView.cellForRow(at: indexPath) as? AnimalCell {
-                updateCell.backgroundImage.image = image
-            }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? AnimalCell else {
+            return UITableViewCell()
         }
+//        let animal = viewModel.animal(at: indexPath.row)!
+        if let animal = viewModel.animal(at: indexPath.row) {
+            cell.configure(with: animal)
+        }
+//        cell.nameLabel.text = animal.name
+//        cell.ageLabel.text = animal.age
+//        cell.weightLabel.text = animal.size
+//        cell.genderLabel.text = animal.gender
+//        cell.breedLabel.text = animal.breeds.primary
+//        imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { (image) in
+//            if let updateCell = tableView.cellForRow(at: indexPath) as? AnimalCell {
+//                updateCell.backgroundImage.image = image
+//            }
+//        }
         return cell
     }
 }
 
 extension AnimalListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let animal = viewModel.animal(at: indexPath.row)
         tableView.deselectRow(at: indexPath, animated: true)
-        navigationController?.pushViewController(AnimalDetailsViewController(animal: animal), animated: false)
+        if let animal = viewModel.animal(at: indexPath.row) {
+            navigationController?.pushViewController(AnimalDetailsViewController(animal: animal), animated: false)
+        }
     }
 }

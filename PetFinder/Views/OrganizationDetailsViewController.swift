@@ -381,12 +381,20 @@ extension OrganizationDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let animal = viewModel.animal(at: indexPath.row)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "animalCollectionViewCell", for: indexPath) as! AnimalCollectionViewCell
-        cell.nameLabel.text = animal.name
-        imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { (image) in
-            if let updateCell = collectionView.cellForItem(at: indexPath) as? AnimalCollectionViewCell {
-                updateCell.photoImageView.image = image
+        if let animal = viewModel.animal(at: indexPath.row) {
+            cell.nameLabel.text = animal.name
+            imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { (image) in
+                if let updateCell = collectionView.cellForItem(at: indexPath) as? AnimalCollectionViewCell {
+                    updateCell.photoImageView.image = image
+                }
             }
         }
+//        cell.nameLabel.text = animal.name
+//        imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { (image) in
+//            if let updateCell = collectionView.cellForItem(at: indexPath) as? AnimalCollectionViewCell {
+//                updateCell.photoImageView.image = image
+//            }
+//        }
 //        cell.configure(with: UIImage(named: images[indexPath.item]))
         return cell
     }
