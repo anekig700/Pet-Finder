@@ -9,6 +9,8 @@ import UIKit
 
 class AnimalCell: UITableViewCell {
     
+    private var currentImagePath: String?
+    
     let imageLoader = ImageLoader()
     
     let backgroundImage: UIImageView = {
@@ -108,6 +110,7 @@ class AnimalCell: UITableViewCell {
     }
     
     func configure(with animal: Animal) {
+        currentImagePath = animal.photos.first?.medium ?? ""
         nameLabel.text = animal.name
         ageLabel.text = animal.age
         weightLabel.text = animal.size
@@ -115,8 +118,16 @@ class AnimalCell: UITableViewCell {
         breedLabel.text = animal.breeds.primary
         
         imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { [weak self] (image) in
-            self?.backgroundImage.image = image
+            if self?.currentImagePath == animal.photos.first?.medium ?? "" {
+                self?.backgroundImage.image = image
+            }
         }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        backgroundImage.image = nil
+        currentImagePath = nil
     }
     
 //    override func setSelected(_ selected: Bool, animated: Bool) {
