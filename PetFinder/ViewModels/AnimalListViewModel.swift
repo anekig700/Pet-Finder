@@ -20,11 +20,11 @@ final class AnimalListViewModel: ObservableObject {
         retrieveAnimals(with: query)
     }
 
-    private func retrieveAnimals(with query: String? = nil) {
-        service.fetchInfo(path: Endpoint.animals.rawValue) { [weak self] (result: Result<Animals, Error>) in
+    func retrieveAnimals(with query: String? = nil) {
+        service.fetchInfo(path: Endpoint.animals.rawValue) { [weak self] (result: Result<[Animal], Error>) in
             switch result {
             case .success(let animals):
-                self?.animals = animals.animals
+                self?.animals = animals
             case .failure(let error):
                 print("Error retrieving animals: \(error)")
             }
@@ -35,8 +35,9 @@ final class AnimalListViewModel: ObservableObject {
         animals.count
     }
     
-    func animal(at index: Int) -> Animal {
-        animals[index]
+    func animal(at index: Int) -> Animal? {
+        guard animals.indices.contains(index) else { return nil }
+        return animals[index]
     }
     
 }
