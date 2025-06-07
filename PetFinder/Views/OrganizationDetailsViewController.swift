@@ -110,6 +110,16 @@ class OrganizationDetailsViewController: UIViewController {
         return map
     }()
     
+    let animalsHeaderLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.textColor = .black
+        label.numberOfLines = 0
+        label.lineBreakStrategy = .hangulWordPriority
+        label.text = "Our animals"
+        return label
+    }()
+    
     let adoptButton: UIButton = {
         let button = UIButton()
         button.setTitle("Contact Organization", for: .normal)
@@ -147,7 +157,7 @@ class OrganizationDetailsViewController: UIViewController {
         let spacing: CGFloat = 4
         let itemsPerRow: CGFloat = 2
         let totalSpacing = (itemsPerRow - 1) * spacing
-        let width = (view.bounds.width - totalSpacing - 32) / itemsPerRow
+        let width = (view.bounds.width - totalSpacing - 16 * 4) / itemsPerRow
 
         layout.scrollDirection = .vertical
         layout.itemSize = CGSize(width: width, height: width)
@@ -168,6 +178,8 @@ class OrganizationDetailsViewController: UIViewController {
     }
 
     func setupView() {
+        
+        prepareCollectionView()
         
         let horizontalHeaderStackView = UIStackView(arrangedSubviews: [
             logoImage,
@@ -233,13 +245,32 @@ class OrganizationDetailsViewController: UIViewController {
             horizontalStackView.bottomAnchor.constraint(equalTo: verticalMapContainer.bottomAnchor, constant: -16),
         ])
         
+        let verticalAnimalsContainer: UIView = {
+            let view = UIView()
+            view.addSubview(animalsHeaderLabel)
+            view.addSubview(animalCollectionView)
+            view.layer.cornerRadius = 16
+            view.clipsToBounds = true
+            view.backgroundColor = .white
+            return view
+        }()
+        NSLayoutConstraint.activate([
+            animalsHeaderLabel.topAnchor.constraint(equalTo: verticalAnimalsContainer.topAnchor, constant: 16),
+            animalsHeaderLabel.leadingAnchor.constraint(equalTo: verticalAnimalsContainer.leadingAnchor, constant: 16),
+            animalsHeaderLabel.trailingAnchor.constraint(equalTo: verticalAnimalsContainer.trailingAnchor, constant: -16),
+            animalsHeaderLabel.bottomAnchor.constraint(equalTo: animalCollectionView.topAnchor, constant: -12),
+            animalCollectionView.leadingAnchor.constraint(equalTo: verticalAnimalsContainer.leadingAnchor, constant: 16),
+            animalCollectionView.trailingAnchor.constraint(equalTo: verticalAnimalsContainer.trailingAnchor, constant: -16),
+            animalCollectionView.bottomAnchor.constraint(equalTo: verticalAnimalsContainer.bottomAnchor, constant: -16),
+        ])
+        
         let organizationInfoContainer = verticalInfoContainer.wrapInShadowContainer()
         let mapContainer = verticalMapContainer.wrapInShadowContainer()
+        let animalsContainer = verticalAnimalsContainer.wrapInShadowContainer()
         
 //        view.addSubview(scrollView)
 //        scrollView.addSubview(contentView)
         
-        prepareCollectionView()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(horizontalStackViewTapped))
         horizontalStackView.isUserInteractionEnabled = true
@@ -249,13 +280,15 @@ class OrganizationDetailsViewController: UIViewController {
         view.addSubview(mapContainer)
 //        view.addSubview(horizontalStackView)
 //        view.addSubview(mapView)
-        view.addSubview(animalCollectionView)
+//        view.addSubview(animalCollectionView)
+        view.addSubview(animalsContainer)
         view.addSubview(adoptButton)
         view.bringSubviewToFront(adoptButton)
 //        scrollView.translatesAutoresizingMaskIntoConstraints = false
 //        contentView.translatesAutoresizingMaskIntoConstraints = false
         organizationInfoContainer.translatesAutoresizingMaskIntoConstraints = false
         mapContainer.translatesAutoresizingMaskIntoConstraints = false
+        animalsContainer.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         adoptButton.translatesAutoresizingMaskIntoConstraints = false
@@ -264,6 +297,8 @@ class OrganizationDetailsViewController: UIViewController {
         mapHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
         animalCollectionView.translatesAutoresizingMaskIntoConstraints = false
         horizontalHeaderStackView.translatesAutoresizingMaskIntoConstraints = false
+        animalsHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
+        verticalAnimalsContainer.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
 //            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -287,10 +322,14 @@ class OrganizationDetailsViewController: UIViewController {
 //            mapView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
 //            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
 //            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            animalCollectionView.topAnchor.constraint(equalTo: mapContainer.bottomAnchor, constant: 16),
-            animalCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            animalCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            animalCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -38),
+//            animalCollectionView.topAnchor.constraint(equalTo: mapContainer.bottomAnchor, constant: 16),
+//            animalCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+//            animalCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+//            animalCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -38),
+            animalsContainer.topAnchor.constraint(equalTo: mapContainer.bottomAnchor, constant: 16),
+            animalsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            animalsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            animalsContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -38),
             adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
@@ -417,7 +456,7 @@ extension OrganizationDetailsViewController: UICollectionViewDataSource {
         let animal = viewModel.animal(at: indexPath.row)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "animalCollectionViewCell", for: indexPath) as! AnimalCollectionViewCell
         if let animal = viewModel.animal(at: indexPath.row) {
-            cell.nameLabel.text = animal.name
+            cell.nameLabel.text = "  " + animal.name + "  "
             imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { (image) in
                 if let updateCell = collectionView.cellForItem(at: indexPath) as? AnimalCollectionViewCell {
                     updateCell.photoImageView.image = image

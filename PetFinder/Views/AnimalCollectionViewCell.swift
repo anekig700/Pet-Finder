@@ -21,8 +21,11 @@ class AnimalCollectionViewCell: UICollectionViewCell {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .tertiaryLabel
+        label.font = .systemFont(ofSize: 12, weight: .regular)
+        label.textColor = .black
+        label.backgroundColor = .systemGray5
+        label.layer.cornerRadius = 4
+        label.clipsToBounds = true
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.required, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -40,8 +43,9 @@ class AnimalCollectionViewCell: UICollectionViewCell {
             photoImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             photoImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             photoImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            nameLabel.bottomAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: -10),
-            nameLabel.leadingAnchor.constraint(equalTo: photoImageView.leadingAnchor)
+            nameLabel.bottomAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: -8),
+            nameLabel.leadingAnchor.constraint(equalTo: photoImageView.leadingAnchor, constant: 8),
+            nameLabel.trailingAnchor.constraint(lessThanOrEqualTo: photoImageView.trailingAnchor, constant: -8)
         ])
         
     }
