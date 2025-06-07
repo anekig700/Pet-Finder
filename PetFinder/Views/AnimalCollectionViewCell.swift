@@ -12,9 +12,9 @@ class AnimalCollectionViewCell: UICollectionViewCell {
     let photoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill  
-        imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        imageView.clipsToBounds = true
+//        imageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
 //        imageView.layer.cornerRadius = 8
         return imageView
     }()
@@ -39,10 +39,9 @@ class AnimalCollectionViewCell: UICollectionViewCell {
             photoImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             photoImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             photoImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            photoImageView.trailingAnchor.constraint(equalTo: nameLabel.leadingAnchor, constant: -16),
-            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
-            nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            photoImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            nameLabel.bottomAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: -10),
+            nameLabel.leadingAnchor.constraint(equalTo: photoImageView.leadingAnchor)
         ])
         
     }

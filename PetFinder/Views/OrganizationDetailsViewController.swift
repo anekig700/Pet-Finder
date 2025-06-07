@@ -144,8 +144,17 @@ class OrganizationDetailsViewController: UIViewController {
     
     private func prepareCollectionView() {
         let layout = UICollectionViewFlowLayout()
+        let spacing: CGFloat = 4
+        let itemsPerRow: CGFloat = 2
+        let totalSpacing = (itemsPerRow - 1) * spacing
+        let width = (view.bounds.width - totalSpacing - 32) / itemsPerRow
+
         layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: view.frame.width - 32, height: 150)
+        layout.itemSize = CGSize(width: width, height: width)
+        layout.minimumLineSpacing = 4
+        layout.minimumInteritemSpacing = 4
+
+//        layout.sectionInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
 //        let totalHeight = 150 * viewModel.animals.count
         
         animalCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -270,8 +279,8 @@ class OrganizationDetailsViewController: UIViewController {
             organizationInfoContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             organizationInfoContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             mapContainer.topAnchor.constraint(equalTo: organizationInfoContainer.bottomAnchor, constant: 8),
-            mapContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            mapContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            mapContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            mapContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
 //            horizontalStackView.topAnchor.constraint(equalTo: organizationInfoContainer.bottomAnchor, constant: 8),
 //            horizontalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
 //            horizontalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -279,11 +288,11 @@ class OrganizationDetailsViewController: UIViewController {
 //            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
 //            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             animalCollectionView.topAnchor.constraint(equalTo: mapContainer.bottomAnchor, constant: 16),
-            animalCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            animalCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            animalCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            animalCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             animalCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -38),
-            adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
         ])
     }
@@ -426,12 +435,4 @@ extension OrganizationDetailsViewController: UICollectionViewDataSource {
     }
 }
 
-extension OrganizationDetailsViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath) -> CGSize {
-            return collectionView.bounds.size
-    }
-}
 
