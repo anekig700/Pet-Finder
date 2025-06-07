@@ -43,6 +43,18 @@ class OrganizationDetailsViewController: UIViewController {
         return label
     }()
     
+    let logoImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.layer.cornerRadius = 20
+        imageView.clipsToBounds = true
+        imageView.layer.borderColor = UIColor.systemGray4.cgColor
+        imageView.layer.borderWidth = 1
+        imageView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        return imageView
+    }()
+    
     let webLabel: UILabel = {
         let label = UILabel()
         label.textColor = .systemBlue
@@ -148,9 +160,22 @@ class OrganizationDetailsViewController: UIViewController {
 
     func setupView() {
         
+        let horizontalHeaderStackView = UIStackView(arrangedSubviews: [
+            logoImage,
+            nameLabel
+        ])
+        horizontalHeaderStackView.alignment = .center
+        horizontalHeaderStackView.distribution = .fill
+        horizontalHeaderStackView.axis = .horizontal
+        horizontalHeaderStackView.spacing = 8
+        
+        self.imageLoader.obtainImageWithPath(imagePath: organization.photos.first?.medium ?? "") { [weak self] (image) in
+            self?.logoImage.image = image
+        }
+        
         let verticalInfoContainer: UIView = {
             let view = UIView()
-            view.addSubview(nameLabel)
+            view.addSubview(horizontalHeaderStackView)
             view.addSubview(descriptionLabel)
             view.layer.cornerRadius = 16
             view.clipsToBounds = true
@@ -158,10 +183,10 @@ class OrganizationDetailsViewController: UIViewController {
             return view
         }()
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: verticalInfoContainer.topAnchor, constant: 16),
-            nameLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: 16),
-            nameLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -16),
-            nameLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -12),
+            horizontalHeaderStackView.topAnchor.constraint(equalTo: verticalInfoContainer.topAnchor, constant: 16),
+            horizontalHeaderStackView.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: 16),
+            horizontalHeaderStackView.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -16),
+            horizontalHeaderStackView.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -12),
             descriptionLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: 16),
             descriptionLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -16),
             descriptionLabel.bottomAnchor.constraint(equalTo: verticalInfoContainer.bottomAnchor, constant: -16),
@@ -229,6 +254,7 @@ class OrganizationDetailsViewController: UIViewController {
         horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
         mapHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
         animalCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        horizontalHeaderStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
 //            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
