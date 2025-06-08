@@ -21,7 +21,7 @@ final class AnimalListViewModel: ObservableObject {
     }
 
     func retrieveAnimals(with query: String? = nil) {
-        service.fetchInfo(path: Endpoint.animals.rawValue) { [weak self] (result: Result<Animals, Error>) in
+        service.fetchInfo(path: Endpoint.animals.rawValue + (query ?? "")) { [weak self] (result: Result<Animals, Error>) in
             switch result {
             case .success(let animals):
                 self?.animals = animals.animals
