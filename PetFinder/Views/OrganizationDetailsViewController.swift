@@ -132,6 +132,8 @@ class OrganizationDetailsViewController: UIViewController {
         return button
     }()
     
+    var collectionViewHeightConstraint: NSLayoutConstraint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .tertiarySystemGroupedBackground
@@ -149,6 +151,8 @@ class OrganizationDetailsViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] in
             self?.animalCollectionView.reloadData()
+            self?.animalCollectionView.layoutIfNeeded()
+            self?.collectionViewHeightConstraint.constant = self?.animalCollectionView.contentSize.height ?? 0
         }.store(in: &cancellables)
     }
     
@@ -169,11 +173,13 @@ class OrganizationDetailsViewController: UIViewController {
         
         animalCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
 //        animalCollectionView.layer.cornerRadius = 8
-//        animalCollectionView.heightAnchor.constraint(equalToConstant: CGFloat(totalHeight)).isActive = true
+        collectionViewHeightConstraint = animalCollectionView.heightAnchor.constraint(equalToConstant: 1)
+        collectionViewHeightConstraint.isActive = true
         animalCollectionView.backgroundColor = .clear
 //        animalCollectionView.isHidden = true
         animalCollectionView.register(AnimalCollectionViewCell.self, forCellWithReuseIdentifier: "animalCollectionViewCell")
         animalCollectionView.dataSource = self
+        animalCollectionView.isScrollEnabled = false
 //        animalCollectionView.delegate = self
     }
 
@@ -268,8 +274,8 @@ class OrganizationDetailsViewController: UIViewController {
         let mapContainer = verticalMapContainer.wrapInShadowContainer()
         let animalsContainer = verticalAnimalsContainer.wrapInShadowContainer()
         
-//        view.addSubview(scrollView)
-//        scrollView.addSubview(contentView)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(horizontalStackViewTapped))
@@ -278,14 +284,11 @@ class OrganizationDetailsViewController: UIViewController {
         
         view.addSubview(organizationInfoContainer)
         view.addSubview(mapContainer)
-//        view.addSubview(horizontalStackView)
-//        view.addSubview(mapView)
-//        view.addSubview(animalCollectionView)
         view.addSubview(animalsContainer)
         view.addSubview(adoptButton)
         view.bringSubviewToFront(adoptButton)
-//        scrollView.translatesAutoresizingMaskIntoConstraints = false
-//        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
         organizationInfoContainer.translatesAutoresizingMaskIntoConstraints = false
         mapContainer.translatesAutoresizingMaskIntoConstraints = false
         animalsContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -301,37 +304,27 @@ class OrganizationDetailsViewController: UIViewController {
         verticalAnimalsContainer.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-//            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-//            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-//            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-//            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-//            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-//            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-//            contentView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            organizationInfoContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
-            organizationInfoContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            organizationInfoContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            mapContainer.topAnchor.constraint(equalTo: organizationInfoContainer.bottomAnchor, constant: 8),
-            mapContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            mapContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-//            horizontalStackView.topAnchor.constraint(equalTo: organizationInfoContainer.bottomAnchor, constant: 8),
-//            horizontalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//            horizontalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-//            mapView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
-//            mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-//            animalCollectionView.topAnchor.constraint(equalTo: mapContainer.bottomAnchor, constant: 16),
-//            animalCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-//            animalCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-//            animalCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -38),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            organizationInfoContainer.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 12),
+            organizationInfoContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            organizationInfoContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            mapContainer.topAnchor.constraint(equalTo: organizationInfoContainer.bottomAnchor, constant: 16),
+            mapContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            mapContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             animalsContainer.topAnchor.constraint(equalTo: mapContainer.bottomAnchor, constant: 16),
-            animalsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            animalsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            animalsContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -38),
-            adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            animalsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            animalsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            animalsContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -38),
+            adoptButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            adoptButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
         ])
     }
@@ -449,11 +442,11 @@ extension OrganizationDetailsViewController: MFMailComposeViewControllerDelegate
 
 extension OrganizationDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.numberOfAnimals()
+        return 6
+//        viewModel.numberOfAnimals()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let animal = viewModel.animal(at: indexPath.row)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "animalCollectionViewCell", for: indexPath) as! AnimalCollectionViewCell
         if let animal = viewModel.animal(at: indexPath.row) {
             cell.nameLabel.text = "  " + animal.name + "  "
