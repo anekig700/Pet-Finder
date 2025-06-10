@@ -36,14 +36,14 @@ class AnimalDetailsViewController: UIViewController {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.font = UIConstants.Fonts.primary
         label.textColor = .black
         return label
     }()
     
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14, weight: .regular)
+        label.font = UIConstants.Fonts.secondary
         label.textColor = .black
         label.lineBreakStrategy = .pushOut
         label.numberOfLines = 0
@@ -63,7 +63,7 @@ class AnimalDetailsViewController: UIViewController {
     
     var organizationNameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14, weight: .regular)
+        label.font = UIConstants.Fonts.secondary
         label.textColor = .black
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -200,11 +200,11 @@ class AnimalDetailsViewController: UIViewController {
         }()
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: verticalInfoContainer.topAnchor, constant: 16),
-            nameLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: 16),
-            nameLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -16),
+            nameLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
+            nameLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
             nameLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -12),
-            descriptionLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: 16),
-            descriptionLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -16),
+            descriptionLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
+            descriptionLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
             descriptionLabel.bottomAnchor.constraint(equalTo: verticalInfoContainer.bottomAnchor, constant: -16),
         ])
         

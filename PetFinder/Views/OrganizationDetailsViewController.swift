@@ -36,7 +36,7 @@ class OrganizationDetailsViewController: UIViewController {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.font = UIConstants.Fonts.primary
         label.textColor = .black
         label.numberOfLines = 0
         label.lineBreakStrategy = .hangulWordPriority
@@ -58,7 +58,7 @@ class OrganizationDetailsViewController: UIViewController {
     let webLabel: UILabel = {
         let label = UILabel()
         label.textColor = .systemBlue
-        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.font = UIConstants.Fonts.primary
         label.textColor = .systemBlue
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         label.setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -85,7 +85,7 @@ class OrganizationDetailsViewController: UIViewController {
     
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14, weight: .regular)
+        label.font = UIConstants.Fonts.secondary
         label.textColor = .black
         label.lineBreakStrategy = .pushOut
         label.numberOfLines = 0
@@ -94,7 +94,7 @@ class OrganizationDetailsViewController: UIViewController {
     
     let mapHeaderLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.font = UIConstants.Fonts.primary
         label.textColor = .black
         label.numberOfLines = 0
         label.lineBreakStrategy = .hangulWordPriority
@@ -112,7 +112,7 @@ class OrganizationDetailsViewController: UIViewController {
     
     let animalsHeaderLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.font = UIConstants.Fonts.primary
         label.textColor = .black
         label.numberOfLines = 0
         label.lineBreakStrategy = .hangulWordPriority
