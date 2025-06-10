@@ -106,12 +106,7 @@ class AnimalDetailsViewController: UIViewController {
     }()
     
     let adoptButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Contact Organization", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 12
-        button.heightAnchor.constraint(equalToConstant: 56).isActive = true
+        let button = CTAButton()
         button.addTarget(self, action: #selector(showContactMenu), for: .touchUpInside)
         button.isHidden = true
         return button
