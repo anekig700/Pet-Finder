@@ -51,17 +51,8 @@ class AnimalDetailsViewController: UIViewController {
     }()
     
     let mapView : MKMapView = {
-        let map = MKMapView()
-        map.layer.cornerRadius = UIConstants.CornerRadiuses.block
-        map.heightAnchor.constraint(equalToConstant: 150).isActive = true
-        map.isScrollEnabled = false
-        map.isZoomEnabled = false
-        map.isRotateEnabled = false
-        map.isPitchEnabled = false
+        let map = MapView()
         map.isHidden = true
-        map.layer.shadowColor = UIColor.black.cgColor
-        map.layer.shadowOpacity = 0.1
-        map.layer.shadowRadius = 8
         return map
     }()
     

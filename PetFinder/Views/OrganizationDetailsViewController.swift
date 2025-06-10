@@ -103,9 +103,7 @@ class OrganizationDetailsViewController: UIViewController {
     }()
     
     let mapView : MKMapView = {
-        let map = MKMapView()
-        map.layer.cornerRadius = UIConstants.CornerRadiuses.block
-        map.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        let map = MapView()
         map.isHidden = true
         return map
     }()
