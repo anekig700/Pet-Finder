@@ -22,4 +22,8 @@ struct UIConstants {
         static let block: CGFloat = 16
         static let image: CGFloat = 8
     }
+    
+    struct Colors {
+        static let mainBackground: UIColor = .tertiarySystemGroupedBackground
+    }
 }

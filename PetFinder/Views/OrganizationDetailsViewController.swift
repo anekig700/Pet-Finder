@@ -131,7 +131,7 @@ class OrganizationDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .tertiarySystemGroupedBackground
+        view.backgroundColor = UIConstants.Colors.mainBackground
         self.title = "Organization Details"
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
