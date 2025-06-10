@@ -11,12 +11,14 @@ import Foundation
 final class AnimalDetailsViewModel: ObservableObject {
 
     @Published private(set) var organizationDetails: OrganizationDetails?
+    private(set) var animal: Animal
 
     private let service: AnimalServiceProtocol
 
-    init(service: AnimalServiceProtocol = AnimalService(), id: String) {
+    init(service: AnimalServiceProtocol = AnimalService(), animal: Animal) {
         self.service = service
-        retrieveOrganization(id: id)
+        self.animal = animal
+        retrieveOrganization(id: animal.organization_id)
     }
 
     private func retrieveOrganization(id: String) {

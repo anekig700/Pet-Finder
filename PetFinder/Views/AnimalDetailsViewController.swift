@@ -13,14 +13,15 @@ import Combine
 
 class AnimalDetailsViewController: UIViewController {
     
-    private let animal: Animal
+//    private let animal: Animal
     let imageLoader = ImageLoader()
     
     private var cancellables: Set<AnyCancellable> = []
 
-    init(animal: Animal) {
-        self.animal = animal
-        self.viewModel = AnimalDetailsViewModel(id: animal.organization_id)
+    init(viewModel: AnimalDetailsViewModel) {
+//        self.animal = animal
+        self.viewModel = viewModel
+//        self.viewModel = AnimalDetailsViewModel(id: animal.organization_id)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -257,22 +258,22 @@ class AnimalDetailsViewController: UIViewController {
     }
     
     private var showAdoptButton: Bool {
-        if animal.contact.email != nil {
+        if viewModel.animal.contact.email != nil {
             return true
-        } else if animal.contact.phone != nil {
+        } else if viewModel.animal.contact.phone != nil {
             return true
         }
         return false
     }
     
     func fillView() {
-        photoCollectionView.isHidden = animal.photos.isEmpty
-        photoPageControl.numberOfPages = animal.photos.count
-        photoPageControl.isHidden = animal.photos.count <= 1
-        nameLabel.text = animal.name
-        descriptionLabel.text = animal.description
+        photoCollectionView.isHidden = viewModel.animal.photos.isEmpty
+        photoPageControl.numberOfPages = viewModel.animal.photos.count
+        photoPageControl.isHidden = viewModel.animal.photos.count <= 1
+        nameLabel.text = viewModel.animal.name
+        descriptionLabel.text = viewModel.animal.description
         adoptButton.isHidden = !showAdoptButton
-        if let fullAddress = animal.contact.address.fullAddress {
+        if let fullAddress = viewModel.animal.contact.address.fullAddress {
             mapView.isHidden = false
             mapView.showAddressOnMap(fullAddress)
         }   
@@ -283,7 +284,7 @@ class AnimalDetailsViewController: UIViewController {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
-        if let phoneNumber = animal.contact.phone {
+        if let phoneNumber = viewModel.animal.contact.phone {
             let callAction = UIAlertAction(title: "Call \(phoneNumber)", style: .default) { _ in
                 if let phoneURL = URL(string: "tel://\(phoneNumber)"),
                    UIApplication.shared.canOpenURL(phoneURL) {
@@ -296,15 +297,15 @@ class AnimalDetailsViewController: UIViewController {
             alert.addAction(callAction)
         }
         
-        if let emailAddress = animal.contact.email {
-            let emailAction = UIAlertAction(title: "Email \(emailAddress)", style: .default) { _ in
+        if let emailAddress = viewModel.animal.contact.email {
+            let emailAction = UIAlertAction(title: "Email \(emailAddress)", style: .default) { [weak self] _ in
                 if MFMailComposeViewController.canSendMail() {
                     let mailVC = MFMailComposeViewController()
                     mailVC.mailComposeDelegate = self
                     mailVC.setToRecipients([emailAddress])
-                    mailVC.setSubject("Adopt \(self.animal.name)")
+                    mailVC.setSubject("Adopt \(self?.viewModel.animal.name)")
                     mailVC.setMessageBody("Hi there,", isHTML: false)
-                    self.present(mailVC, animated: true)
+                    self?.present(mailVC, animated: true)
                 } else {
                     print("Cannot send email. Configure an email account.")
                 }
@@ -340,12 +341,12 @@ extension AnimalDetailsViewController: MFMailComposeViewControllerDelegate {
 
 extension AnimalDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        animal.photos.count
+        viewModel.animal.photos.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "carouselImageCell", for: indexPath) as! AnimalCarouselImageCell
-        imageLoader.obtainImageWithPath(imagePath: animal.photos[indexPath.row].medium) { (image) in
+        imageLoader.obtainImageWithPath(imagePath: viewModel.animal.photos[indexPath.row].medium) { (image) in
             cell.photoImageView.image = image
         }
 //        cell.configure(with: UIImage(named: images[indexPath.item]))
