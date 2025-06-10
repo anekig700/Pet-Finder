@@ -30,10 +30,10 @@ final class PetFinderTests: XCTestCase {
     }
 
     func testFetchAnimalsSuccess() {
-        mockService.result = [
+        mockService.result = Animals(animals: [
             Animal(id: 1, name: "Breeze", age: "20", size: "small", gender: "xl", breeds: .init(primary: "Terrier"), photos: [], description: nil, contact: .init(email: nil, phone: nil, address: .init(city: nil, state: nil, postcode: nil)), organization_id: "i"),
             Animal(id: 2, name: "Perry", age: "20", size: "small", gender: "xl", breeds: .init(primary: "Domestic Short Hair"), photos: [], description: nil, contact: .init(email: nil, phone: nil, address: .init(city: nil, state: nil, postcode: nil)), organization_id: "i")
-        ]
+        ])
 
         let expectation = XCTestExpectation(description: "Animal list loaded")
 
@@ -45,29 +45,29 @@ final class PetFinderTests: XCTestCase {
                 XCTAssertEqual(animals[1].name, "Perry")
                 expectation.fulfill()
             }
-        .store(in: &cancellables)
+            .store(in: &cancellables)
 
         sut.retrieveAnimals()
 
         wait(for: [expectation], timeout: 1.0)
     }
     
-//    func testLoadArticlesDecodingFailure() {
-//        mockService.result = ""
-//        
-//        let expectation = XCTestExpectation(description: "Handled decoding failure")
-//        
-//        sut.$animals
-//            .dropFirst()
-//            .sink { animals in
-//                XCTAssertEqual(animals.count, 0)
-//                expectation.fulfill()
-//            }
-//        .store(in: &cancellables)
-//
-//        sut.retrieveAnimals()
-//
-//        wait(for: [expectation], timeout: 1.0)
-//    }
+    func testLoadArticlesDecodingFailure() {
+        mockService.result = ""
+        
+        let expectation = XCTestExpectation(description: "Handled decoding failure")
+        
+        sut.$animals
+            .dropFirst()
+            .sink { animals in
+                XCTAssertEqual(animals.count, 0)
+                expectation.fulfill()
+            }
+        .store(in: &cancellables)
+
+        sut.retrieveAnimals()
+
+        wait(for: [expectation], timeout: 1.0)
+    }
 
 }

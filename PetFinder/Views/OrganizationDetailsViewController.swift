@@ -102,7 +102,7 @@ class OrganizationDetailsViewController: UIViewController {
         return label
     }()
     
-    let mapView : MKMapView = {
+    let mapView: MKMapView = {
         let map = MapView()
         map.isHidden = true
         return map
