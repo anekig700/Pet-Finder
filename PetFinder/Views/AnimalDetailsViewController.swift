@@ -52,7 +52,7 @@ class AnimalDetailsViewController: UIViewController {
     
     let mapView : MKMapView = {
         let map = MKMapView()
-        map.layer.cornerRadius = 16
+        map.layer.cornerRadius = UIConstants.CornerRadiuses.block
         map.heightAnchor.constraint(equalToConstant: 150).isActive = true
         map.isHidden = true
         map.layer.shadowColor = UIColor.black.cgColor
@@ -73,7 +73,7 @@ class AnimalDetailsViewController: UIViewController {
     let organizationLogo: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.layer.cornerRadius = 16
+        imageView.layer.cornerRadius = UIConstants.CornerRadiuses.block
         imageView.clipsToBounds = true
         imageView.layer.borderColor = UIColor.systemGray4.cgColor
         imageView.layer.borderWidth = 1
@@ -156,7 +156,7 @@ class AnimalDetailsViewController: UIViewController {
         layout.minimumInteritemSpacing = 0
         
         photoCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        photoCollectionView.layer.cornerRadius = 16
+        photoCollectionView.layer.cornerRadius = UIConstants.CornerRadiuses.block
         photoCollectionView.isPagingEnabled = true
         photoCollectionView.showsHorizontalScrollIndicator = false
         photoCollectionView.heightAnchor.constraint(equalToConstant: 300).isActive = true
@@ -186,25 +186,25 @@ class AnimalDetailsViewController: UIViewController {
         horizontalStackView.axis = .horizontal
         horizontalStackView.spacing = 8
         horizontalStackView.backgroundColor = .white
-        horizontalStackView.layer.cornerRadius = 16
+        horizontalStackView.layer.cornerRadius = UIConstants.CornerRadiuses.block
         horizontalStackView.clipsToBounds = true
         
         let verticalInfoContainer: UIView = {
             let view = UIView()
             view.addSubview(nameLabel)
             view.addSubview(descriptionLabel)
-            view.layer.cornerRadius = 16
+            view.layer.cornerRadius = UIConstants.CornerRadiuses.block
             view.clipsToBounds = true
             view.backgroundColor = .white
             return view
         }()
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: verticalInfoContainer.topAnchor, constant: 16),
-            nameLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            nameLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            nameLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            nameLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             nameLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -12),
-            descriptionLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            descriptionLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            descriptionLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            descriptionLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             descriptionLabel.bottomAnchor.constraint(equalTo: verticalInfoContainer.bottomAnchor, constant: -16),
         ])
         
@@ -245,23 +245,23 @@ class AnimalDetailsViewController: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: view.widthAnchor),
             photoCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            photoCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            photoCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            photoCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            photoCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             photoPageControl.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 10),
             photoPageControl.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             animalInfoContainer.topAnchor.constraint(equalTo: photoPageControl.bottomAnchor, constant: 10),
-            animalInfoContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            animalInfoContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            animalInfoContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            animalInfoContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             organizationInfoContainer.topAnchor.constraint(equalTo: verticalInfoContainer.bottomAnchor, constant: 16),
-            organizationInfoContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            organizationInfoContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            organizationInfoContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            organizationInfoContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             organizationInfoContainer.heightAnchor.constraint(equalToConstant: 49),
             mapContainer.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
-            mapContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            mapContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            mapContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            mapContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             mapContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -38),
-            adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
         ])
     }

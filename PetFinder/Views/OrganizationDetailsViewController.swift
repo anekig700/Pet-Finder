@@ -104,7 +104,7 @@ class OrganizationDetailsViewController: UIViewController {
     
     let mapView : MKMapView = {
         let map = MKMapView()
-        map.layer.cornerRadius = 8
+        map.layer.cornerRadius = UIConstants.CornerRadiuses.block
         map.heightAnchor.constraint(equalToConstant: 150).isActive = true
         map.isHidden = true
         return map
@@ -125,7 +125,7 @@ class OrganizationDetailsViewController: UIViewController {
         button.setTitle("Contact Organization", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 8
+        button.layer.cornerRadius = UIConstants.CornerRadiuses.image
         button.heightAnchor.constraint(equalToConstant: 56).isActive = true
         button.addTarget(self, action: #selector(showContactMenu), for: .touchUpInside)
         button.isHidden = true
@@ -203,18 +203,18 @@ class OrganizationDetailsViewController: UIViewController {
             let view = UIView()
             view.addSubview(horizontalHeaderStackView)
             view.addSubview(descriptionLabel)
-            view.layer.cornerRadius = 16
+            view.layer.cornerRadius = UIConstants.CornerRadiuses.block
             view.clipsToBounds = true
             view.backgroundColor = .white
             return view
         }()
         NSLayoutConstraint.activate([
             horizontalHeaderStackView.topAnchor.constraint(equalTo: verticalInfoContainer.topAnchor, constant: 16),
-            horizontalHeaderStackView.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            horizontalHeaderStackView.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            horizontalHeaderStackView.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            horizontalHeaderStackView.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             horizontalHeaderStackView.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -12),
-            descriptionLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            descriptionLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            descriptionLabel.leadingAnchor.constraint(equalTo: verticalInfoContainer.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            descriptionLabel.trailingAnchor.constraint(equalTo: verticalInfoContainer.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             descriptionLabel.bottomAnchor.constraint(equalTo: verticalInfoContainer.bottomAnchor, constant: -16),
         ])
         
@@ -232,21 +232,21 @@ class OrganizationDetailsViewController: UIViewController {
             view.addSubview(mapHeaderLabel)
             view.addSubview(mapView)
             view.addSubview(horizontalStackView)
-            view.layer.cornerRadius = 16
+            view.layer.cornerRadius = UIConstants.CornerRadiuses.block
             view.clipsToBounds = true
             view.backgroundColor = .white
             return view
         }()
         NSLayoutConstraint.activate([
             mapHeaderLabel.topAnchor.constraint(equalTo: verticalMapContainer.topAnchor, constant: 16),
-            mapHeaderLabel.leadingAnchor.constraint(equalTo: verticalMapContainer.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            mapHeaderLabel.trailingAnchor.constraint(equalTo: verticalMapContainer.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            mapHeaderLabel.leadingAnchor.constraint(equalTo: verticalMapContainer.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            mapHeaderLabel.trailingAnchor.constraint(equalTo: verticalMapContainer.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             mapHeaderLabel.bottomAnchor.constraint(equalTo: mapView.topAnchor, constant: -12),
-            mapView.leadingAnchor.constraint(equalTo: verticalMapContainer.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            mapView.trailingAnchor.constraint(equalTo: verticalMapContainer.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            mapView.leadingAnchor.constraint(equalTo: verticalMapContainer.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            mapView.trailingAnchor.constraint(equalTo: verticalMapContainer.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             mapView.bottomAnchor.constraint(equalTo: horizontalStackView.topAnchor, constant: -12),
-            horizontalStackView.leadingAnchor.constraint(equalTo: verticalMapContainer.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            horizontalStackView.trailingAnchor.constraint(equalTo: verticalMapContainer.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            horizontalStackView.leadingAnchor.constraint(equalTo: verticalMapContainer.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            horizontalStackView.trailingAnchor.constraint(equalTo: verticalMapContainer.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             horizontalStackView.bottomAnchor.constraint(equalTo: verticalMapContainer.bottomAnchor, constant: -16),
         ])
         
@@ -254,18 +254,18 @@ class OrganizationDetailsViewController: UIViewController {
             let view = UIView()
             view.addSubview(animalsHeaderLabel)
             view.addSubview(animalCollectionView)
-            view.layer.cornerRadius = 16
+            view.layer.cornerRadius = UIConstants.CornerRadiuses.block
             view.clipsToBounds = true
             view.backgroundColor = .white
             return view
         }()
         NSLayoutConstraint.activate([
             animalsHeaderLabel.topAnchor.constraint(equalTo: verticalAnimalsContainer.topAnchor, constant: 16),
-            animalsHeaderLabel.leadingAnchor.constraint(equalTo: verticalAnimalsContainer.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            animalsHeaderLabel.trailingAnchor.constraint(equalTo: verticalAnimalsContainer.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            animalsHeaderLabel.leadingAnchor.constraint(equalTo: verticalAnimalsContainer.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            animalsHeaderLabel.trailingAnchor.constraint(equalTo: verticalAnimalsContainer.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             animalsHeaderLabel.bottomAnchor.constraint(equalTo: animalCollectionView.topAnchor, constant: -12),
-            animalCollectionView.leadingAnchor.constraint(equalTo: verticalAnimalsContainer.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            animalCollectionView.trailingAnchor.constraint(equalTo: verticalAnimalsContainer.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            animalCollectionView.leadingAnchor.constraint(equalTo: verticalAnimalsContainer.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            animalCollectionView.trailingAnchor.constraint(equalTo: verticalAnimalsContainer.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             animalCollectionView.bottomAnchor.constraint(equalTo: verticalAnimalsContainer.bottomAnchor, constant: -16),
         ])
         
@@ -313,17 +313,17 @@ class OrganizationDetailsViewController: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: view.widthAnchor),
             organizationInfoContainer.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 12),
-            organizationInfoContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            organizationInfoContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            organizationInfoContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            organizationInfoContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             mapContainer.topAnchor.constraint(equalTo: organizationInfoContainer.bottomAnchor, constant: 16),
-            mapContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            mapContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            mapContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            mapContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             animalsContainer.topAnchor.constraint(equalTo: mapContainer.bottomAnchor, constant: 16),
-            animalsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            animalsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            animalsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            animalsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             animalsContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -38),
-            adoptButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontalPadding),
-            adoptButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontalPadding),
+            adoptButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            adoptButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
         ])
     }
