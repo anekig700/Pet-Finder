@@ -9,6 +9,8 @@ import UIKit
 
 class AnimalCarouselImageCell: UICollectionViewCell {
     
+    let imageLoader = ImageLoader()
+    
     let photoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill  
@@ -36,7 +38,9 @@ class AnimalCarouselImageCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with image: UIImage?) {
-        photoImageView.image = image
+    func configure(with animal: Animal, at index: Int) {
+        imageLoader.obtainImageWithPath(imagePath: animal.photos[index].medium) { [weak self] (image) in
+            self?.photoImageView.image = image
+        }
     }
 }

@@ -13,15 +13,12 @@ import Combine
 
 class AnimalDetailsViewController: UIViewController {
     
-//    private let animal: Animal
     let imageLoader = ImageLoader()
     
     private var cancellables: Set<AnyCancellable> = []
 
     init(viewModel: AnimalDetailsViewModel) {
-//        self.animal = animal
         self.viewModel = viewModel
-//        self.viewModel = AnimalDetailsViewModel(id: animal.organization_id)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -345,11 +342,11 @@ extension AnimalDetailsViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "carouselImageCell", for: indexPath) as! AnimalCarouselImageCell
-        imageLoader.obtainImageWithPath(imagePath: viewModel.animal.photos[indexPath.row].medium) { (image) in
-            cell.photoImageView.image = image
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "carouselImageCell", for: indexPath) as? AnimalCarouselImageCell else {
+            return UICollectionViewCell()
         }
-//        cell.configure(with: UIImage(named: images[indexPath.item]))
+        cell.configure(with: viewModel.animal, at: indexPath.row)
+        
         return cell
     }
 }
