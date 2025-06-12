@@ -39,16 +39,22 @@ class AnimalTableViewCell: UITableViewCell {
     
     let ageLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .medium)
-        label.textColor = .secondaryLabel
+        label.font = .systemFont(ofSize: 12, weight: .regular)
+        label.textColor = .black
+        label.backgroundColor = .systemGray5
+        label.layer.cornerRadius = 4
+        label.clipsToBounds = true
         label.text = "Age"
         return label
     }()
     
     let genderLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .medium)
-        label.textColor = .secondaryLabel
+        label.font = .systemFont(ofSize: 12, weight: .regular)
+        label.textColor = .black
+        label.backgroundColor = .systemGray5
+        label.layer.cornerRadius = 4
+        label.clipsToBounds = true
         label.text = "Gender"
         return label
     }()
@@ -62,8 +68,11 @@ class AnimalTableViewCell: UITableViewCell {
     
     let weightLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .medium)
-        label.textColor = .secondaryLabel
+        label.font = .systemFont(ofSize: 12, weight: .regular)
+        label.textColor = .black
+        label.backgroundColor = .systemGray5
+        label.layer.cornerRadius = 4
+        label.clipsToBounds = true
         label.text = "Weight"
         return label
     }()
@@ -76,9 +85,24 @@ class AnimalTableViewCell: UITableViewCell {
             genderLabel,
             weightLabel
         ])
-        horizontalStackView.distribution = .equalCentering
+//        horizontalStackView.distribution = .equalCentering
         horizontalStackView.axis = .horizontal
-        horizontalStackView.spacing = 5
+        horizontalStackView.spacing = 8
+        horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let viewWithImage = UIView()
+        viewWithImage.addSubview(animalImage)
+        viewWithImage.addSubview(horizontalStackView)
+        viewWithImage.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            animalImage.bottomAnchor.constraint(equalTo: viewWithImage.bottomAnchor),
+            animalImage.leadingAnchor.constraint(equalTo: viewWithImage.leadingAnchor),
+            animalImage.trailingAnchor.constraint(equalTo: viewWithImage.trailingAnchor),
+            animalImage.topAnchor.constraint(equalTo: viewWithImage.topAnchor),
+            horizontalStackView.bottomAnchor.constraint(equalTo: animalImage.bottomAnchor, constant: -10),
+            horizontalStackView.leftAnchor.constraint(equalTo: animalImage.leftAnchor, constant: 10)
+        ])
         
         let verticalStackView = UIStackView(arrangedSubviews: [
             nameLabel,
@@ -101,7 +125,7 @@ class AnimalTableViewCell: UITableViewCell {
     
         
         let mainStackView = UIStackView(arrangedSubviews: [
-            animalImage,
+            viewWithImage,
             wrapperVerticalStackView
         ])
         mainStackView.axis = .vertical
@@ -139,9 +163,9 @@ class AnimalTableViewCell: UITableViewCell {
     func configure(with animal: Animal) {
         currentImagePath = animal.photos.first?.medium ?? ""
         nameLabel.text = animal.name
-        ageLabel.text = animal.age
-        weightLabel.text = animal.size
-        genderLabel.text = animal.gender
+        ageLabel.text = "  " + animal.age + "  "
+        weightLabel.text = "  " + animal.size + "  "
+        genderLabel.text = "  " + animal.gender + "  "
         breedLabel.text = animal.breeds.primary
         
         imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { [weak self] (image) in
