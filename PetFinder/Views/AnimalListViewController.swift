@@ -20,7 +20,7 @@ class AnimalListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIConstants.Colors.mainBackground
         safeArea = view.layoutMarginsGuide
         setupTableView()
         
@@ -35,6 +35,8 @@ class AnimalListViewController: UIViewController {
     func setupTableView() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.layer.cornerRadius = UIConstants.CornerRadiuses.block
+        tableView.separatorStyle = .none
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
@@ -43,7 +45,7 @@ class AnimalListViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
         
-        tableView.register(AnimalCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(AnimalTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.dataSource = self
         tableView.delegate = self
     }
@@ -55,7 +57,7 @@ extension AnimalListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? AnimalCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? AnimalTableViewCell else {
             return UITableViewCell()
         }
         

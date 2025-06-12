@@ -1,5 +1,5 @@
 //
-//  AnimalCell.swift
+//  AnimalTableViewCell.swift
 //  PetFinder
 //
 //  Created by Kotya on 20/04/2025.
@@ -7,9 +7,10 @@
 
 import UIKit
 
-class AnimalCell: UITableViewCell {
+class AnimalTableViewCell: UITableViewCell {
     
     private var currentImagePath: String?
+    private let containerView = UIView()
     
     let imageLoader = ImageLoader()
     
@@ -20,11 +21,19 @@ class AnimalCell: UITableViewCell {
         return imageView
      }()
     
+    let animalImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.heightAnchor.constraint(equalToConstant: 266).isActive = true
+        return imageView
+    }()
+    
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 20, weight: .bold)
-        label.textColor = .tertiaryLabel
-        label.text = "Name"
+        label.font = UIConstants.Fonts.primary
+        label.textColor = .black
         return label
     }()
     
@@ -46,9 +55,8 @@ class AnimalCell: UITableViewCell {
     
     let breedLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .medium)
+        label.font = UIConstants.Fonts.secondary
         label.textColor = .secondaryLabel
-        label.text = "Breed"
         return label
     }()
     
@@ -66,7 +74,6 @@ class AnimalCell: UITableViewCell {
         let horizontalStackView = UIStackView(arrangedSubviews: [
             ageLabel,
             genderLabel,
-            breedLabel,
             weightLabel
         ])
         horizontalStackView.distribution = .equalCentering
@@ -75,34 +82,54 @@ class AnimalCell: UITableViewCell {
         
         let verticalStackView = UIStackView(arrangedSubviews: [
             nameLabel,
-            horizontalStackView
+            breedLabel
         ])
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 4
         addSubview(verticalStackView)
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+//        verticalStackView.heightAnchor.constraint(equalToConstant: 55).isActive = true
+        
+        let wrapperVerticalStackView = UIView()
+        wrapperVerticalStackView.addSubview(verticalStackView)
+        
+        NSLayoutConstraint.activate([
+            verticalStackView.bottomAnchor.constraint(equalTo: wrapperVerticalStackView.bottomAnchor, constant: -8),
+            verticalStackView.leadingAnchor.constraint(equalTo: wrapperVerticalStackView.leadingAnchor, constant: UIConstants.Padding.horizontal),
+            verticalStackView.trailingAnchor.constraint(equalTo: wrapperVerticalStackView.trailingAnchor, constant: -UIConstants.Padding.horizontal),
+        ])
+    
         
         let mainStackView = UIStackView(arrangedSubviews: [
-            verticalStackView
+            animalImage,
+            wrapperVerticalStackView
         ])
-        mainStackView.axis = .horizontal
+        mainStackView.axis = .vertical
+        mainStackView.spacing = 8
         addSubview(mainStackView)
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         
-        NSLayoutConstraint.activate([
-            mainStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            mainStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            mainStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            mainStackView.heightAnchor.constraint(equalToConstant: 40),
-            verticalStackView.topAnchor.constraint(greaterThanOrEqualTo: mainStackView.topAnchor),
-            verticalStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 12),
-            verticalStackView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor, constant: -8),
-            verticalStackView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -12),
-            self.heightAnchor.constraint(equalToConstant: 200)
-        ])
+        contentView.addSubview(containerView)
+        contentView.backgroundColor = UIConstants.Colors.mainBackground
+//        containerView.addSubview(horizontalStackView)
+//        containerView.addSubview(verticalStackView)
+        containerView.addSubview(mainStackView)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.layer.cornerRadius = UIConstants.CornerRadiuses.block
+        containerView.clipsToBounds = true
+        containerView.backgroundColor = .white
         
-        self.backgroundView = backgroundImage
-        mainStackView.backgroundColor = .white.withAlphaComponent(0.8)
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -14),
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            containerView.heightAnchor.constraint(equalToConstant: 320),
+            mainStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            mainStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            mainStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            mainStackView.topAnchor.constraint(equalTo: containerView.topAnchor)
+        ])
     }
     
     required init?(coder: NSCoder) {
@@ -119,14 +146,14 @@ class AnimalCell: UITableViewCell {
         
         imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { [weak self] (image) in
             if self?.currentImagePath == animal.photos.first?.medium ?? "" {
-                self?.backgroundImage.image = image
+                self?.animalImage.image = image
             }
         }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        backgroundImage.image = nil
+        animalImage.image = nil
         currentImagePath = nil
     }
     
