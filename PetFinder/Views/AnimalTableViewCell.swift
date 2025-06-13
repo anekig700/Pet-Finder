@@ -38,24 +38,12 @@ class AnimalTableViewCell: UITableViewCell {
     }()
     
     let ageLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .regular)
-        label.textColor = .black
-        label.backgroundColor = .systemGray5
-        label.layer.cornerRadius = 4
-        label.clipsToBounds = true
-        label.text = "Age"
+        let label = PropertyLabel()
         return label
     }()
     
     let genderLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .regular)
-        label.textColor = .black
-        label.backgroundColor = .systemGray5
-        label.layer.cornerRadius = 4
-        label.clipsToBounds = true
-        label.text = "Gender"
+        let label = PropertyLabel()
         return label
     }()
     
@@ -67,13 +55,7 @@ class AnimalTableViewCell: UITableViewCell {
     }()
     
     let weightLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .regular)
-        label.textColor = .black
-        label.backgroundColor = .systemGray5
-        label.layer.cornerRadius = 4
-        label.clipsToBounds = true
-        label.text = "Weight"
+        let label = PropertyLabel()
         return label
     }()
 

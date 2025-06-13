@@ -20,15 +20,7 @@ class AnimalCollectionViewCell: UICollectionViewCell {
     }()
     
     let nameLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .regular)
-        label.textColor = .black
-        label.backgroundColor = .systemGray5
-        label.layer.cornerRadius = 4
-        label.clipsToBounds = true
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        label.setContentCompressionResistancePriority(.required, for: .horizontal)
-        label.translatesAutoresizingMaskIntoConstraints = false
+        let label = PropertyLabel()
         return label
     }()
 
