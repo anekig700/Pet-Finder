@@ -25,7 +25,7 @@ class AnimalListViewController: UIViewController {
         setupTableView()
         
         viewModel.objectWillChange
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in
             self?.tableView.reloadData()
             }

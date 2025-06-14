@@ -141,7 +141,7 @@ class OrganizationDetailsViewController: UIViewController {
         fillView()
         
         viewModel.objectWillChange
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in
             self?.animalCollectionView.reloadData()
             self?.animalCollectionView.layoutIfNeeded()

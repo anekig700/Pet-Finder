@@ -128,7 +128,7 @@ class AnimalDetailsViewController: UIViewController {
         fillView()
         
         viewModel.objectWillChange
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.organizationNameLabel.text = self?.viewModel.organization().name
                 self?.imageLoader.obtainImageWithPath(imagePath: self?.viewModel.organization().photos.first?.medium ?? "") { (image) in
