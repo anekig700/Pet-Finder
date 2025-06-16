@@ -274,6 +274,9 @@ class OrganizationDetailsViewController: UIViewController {
         horizontalStackView.isUserInteractionEnabled = true
         horizontalStackView.addGestureRecognizer(tapGesture)
         
+        let mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(mapTapped))
+        mapView.addGestureRecognizer(mapTapGesture)
+        
         view.addSubview(organizationInfoContainer)
         view.addSubview(mapContainer)
         view.addSubview(animalsContainer)
@@ -384,6 +387,11 @@ class OrganizationDetailsViewController: UIViewController {
             UIApplication.shared.open(url)
         }
     }
+    
+    @objc func mapTapped() {
+        guard let address = organization.address.fullAddress else { return }
+        geocodeAndOpenInMaps(address)
+    }
 }
 
 // MARK: - MFMailComposeViewControllerDelegate
@@ -402,8 +410,10 @@ extension OrganizationDetailsViewController: MFMailComposeViewControllerDelegate
 
 extension OrganizationDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if viewModel.numberOfAnimals() < 6 {
+            return viewModel.numberOfAnimals()
+        }
         return 6
-//        viewModel.numberOfAnimals()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

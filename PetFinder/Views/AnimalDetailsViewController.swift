@@ -204,6 +204,9 @@ class AnimalDetailsViewController: UIViewController {
         let organizationInfoContainer = horizontalStackView.wrapInShadowContainer()
         let mapContainer = mapView.wrapInShadowContainer()
         
+        let mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(mapViewTapped))
+        mapView.addGestureRecognizer(mapTapGesture)
+        
         contentView.addSubview(photoCollectionView)
         contentView.addSubview(photoPageControl)
         contentView.addSubview(animalInfoContainer)
@@ -319,6 +322,11 @@ class AnimalDetailsViewController: UIViewController {
         guard let organization = viewModel.organizationDetails else { return }
         let newVC = OrganizationDetailsViewController(organization: organization.organization)
         navigationController?.pushViewController(newVC, animated: true)
+    }
+    
+    @objc func mapViewTapped() {
+        guard let address = viewModel.animal.contact.address.fullAddress else { return }
+        geocodeAndOpenInMaps(address)
     }
 }
 
