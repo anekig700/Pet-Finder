@@ -172,7 +172,7 @@ class OrganizationDetailsViewController: UIViewController {
         animalCollectionView.register(AnimalCollectionViewCell.self, forCellWithReuseIdentifier: "animalCollectionViewCell")
         animalCollectionView.dataSource = self
         animalCollectionView.isScrollEnabled = false
-//        animalCollectionView.delegate = self
+        animalCollectionView.delegate = self
     }
 
     func setupView() {
@@ -434,6 +434,15 @@ extension OrganizationDetailsViewController: UICollectionViewDataSource {
 //        }
 //        cell.configure(with: UIImage(named: images[indexPath.item]))
         return cell
+    }
+}
+
+extension OrganizationDetailsViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        if let animal = viewModel.animal(at: indexPath.row) {
+            navigationController?.pushViewController(AnimalDetailsViewController(viewModel: AnimalDetailsViewModel(animal: animal)), animated: false)
+        }
     }
 }
 
