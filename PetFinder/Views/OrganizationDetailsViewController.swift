@@ -118,6 +118,16 @@ class OrganizationDetailsViewController: UIViewController {
         return label
     }()
     
+    let seeAllButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Show more", for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 15, weight: .regular)
+        button.addTarget(self, action: #selector(showContactMenu), for: .touchUpInside)
+//        button.isHidden = true
+        return button
+    }()
+    
     let adoptButton: UIButton = {
         let button = CTAButton()
         button.addTarget(self, action: #selector(showContactMenu), for: .touchUpInside)
@@ -247,6 +257,7 @@ class OrganizationDetailsViewController: UIViewController {
             let view = UIView()
             view.addSubview(animalsHeaderLabel)
             view.addSubview(animalCollectionView)
+            view.addSubview(seeAllButton)
             view.layer.cornerRadius = UIConstants.CornerRadiuses.block
             view.clipsToBounds = true
             view.backgroundColor = .white
@@ -259,7 +270,10 @@ class OrganizationDetailsViewController: UIViewController {
             animalsHeaderLabel.bottomAnchor.constraint(equalTo: animalCollectionView.topAnchor, constant: -12),
             animalCollectionView.leadingAnchor.constraint(equalTo: verticalAnimalsContainer.leadingAnchor, constant: UIConstants.Padding.horizontal),
             animalCollectionView.trailingAnchor.constraint(equalTo: verticalAnimalsContainer.trailingAnchor, constant: -UIConstants.Padding.horizontal),
-            animalCollectionView.bottomAnchor.constraint(equalTo: verticalAnimalsContainer.bottomAnchor, constant: -16),
+//            animalCollectionView.bottomAnchor.constraint(equalTo: verticalAnimalsContainer.bottomAnchor, constant: -16),
+            seeAllButton.topAnchor.constraint(equalTo: animalCollectionView.bottomAnchor, constant: 16),
+            seeAllButton.trailingAnchor.constraint(equalTo: verticalAnimalsContainer.trailingAnchor, constant: -UIConstants.Padding.horizontal),
+            seeAllButton.bottomAnchor.constraint(equalTo: verticalAnimalsContainer.bottomAnchor, constant: -16)
         ])
         
         let organizationInfoContainer = verticalInfoContainer.wrapInShadowContainer()
@@ -297,6 +311,7 @@ class OrganizationDetailsViewController: UIViewController {
         horizontalHeaderStackView.translatesAutoresizingMaskIntoConstraints = false
         animalsHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
         verticalAnimalsContainer.translatesAutoresizingMaskIntoConstraints = false
+        seeAllButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
