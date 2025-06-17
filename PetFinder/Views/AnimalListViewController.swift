@@ -16,7 +16,16 @@ class AnimalListViewController: UIViewController {
     
     private var cancellables: Set<AnyCancellable> = []
     
-    private let viewModel = AnimalListViewModel()
+    private let viewModel: AnimalListViewModel
+    
+    init(viewModel: AnimalListViewModel = AnimalListViewModel()) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

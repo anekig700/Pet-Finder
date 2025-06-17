@@ -123,7 +123,7 @@ class OrganizationDetailsViewController: UIViewController {
         button.setTitle("Show more", for: .normal)
         button.setTitleColor(.systemBlue, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 15, weight: .regular)
-        button.addTarget(self, action: #selector(showContactMenu), for: .touchUpInside)
+        button.addTarget(self, action: #selector(seeAllTapped), for: .touchUpInside)
 //        button.isHidden = true
         return button
     }()
@@ -406,6 +406,10 @@ class OrganizationDetailsViewController: UIViewController {
     @objc func mapTapped() {
         guard let address = organization.address.fullAddress else { return }
         geocodeAndOpenInMaps(address)
+    }
+    
+    @objc func seeAllTapped() {
+        navigationController?.pushViewController(AnimalListViewController(viewModel: AnimalListViewModel(query: "?organization=\(organization.id)")), animated: false)
     }
 }
 
