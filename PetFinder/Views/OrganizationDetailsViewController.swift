@@ -291,9 +291,9 @@ class OrganizationDetailsViewController: UIViewController {
         let mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(mapTapped))
         mapView.addGestureRecognizer(mapTapGesture)
         
-        view.addSubview(organizationInfoContainer)
-        view.addSubview(mapContainer)
-        view.addSubview(animalsContainer)
+        contentView.addSubview(organizationInfoContainer)
+        contentView.addSubview(mapContainer)
+        contentView.addSubview(animalsContainer)
         view.addSubview(adoptButton)
         view.bringSubviewToFront(adoptButton)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
