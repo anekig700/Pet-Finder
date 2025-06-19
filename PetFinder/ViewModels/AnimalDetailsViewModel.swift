@@ -32,8 +32,9 @@ final class AnimalDetailsViewModel: ObservableObject {
         }
     }
     
-    func organization() -> Organization {
-        organizationDetails!.organization
+    func organization() -> Organization? {
+        guard let organizationDetails = organizationDetails else { return nil }
+        return organizationDetails.organization
     }
 }
 

@@ -130,8 +130,8 @@ class AnimalDetailsViewController: UIViewController {
         viewModel.objectWillChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.organizationNameLabel.text = self?.viewModel.organization().name
-                self?.imageLoader.obtainImageWithPath(imagePath: self?.viewModel.organization().photos.first?.medium ?? "") { (image) in
+                self?.organizationNameLabel.text = self?.viewModel.organization()?.name
+                self?.imageLoader.obtainImageWithPath(imagePath: self?.viewModel.organization()?.photos.first?.medium ?? "") { (image) in
                     self?.organizationLogo.image = image
                 }
         }.store(in: &cancellables)
@@ -300,12 +300,13 @@ class AnimalDetailsViewController: UIViewController {
         if let emailAddress = viewModel.animal.contact.email {
             let emailAction = UIAlertAction(title: "Email \(emailAddress)", style: .default) { [weak self] _ in
                 if MFMailComposeViewController.canSendMail() {
+                    guard let self = self else { return }
                     let mailVC = MFMailComposeViewController()
                     mailVC.mailComposeDelegate = self
                     mailVC.setToRecipients([emailAddress])
-                    mailVC.setSubject("Adopt \(self?.viewModel.animal.name)")
+                    mailVC.setSubject("Adopt \(self.viewModel.animal.name)")
                     mailVC.setMessageBody("Hi there,", isHTML: false)
-                    self?.present(mailVC, animated: true)
+                    self.present(mailVC, animated: true)
                 } else {
                     print("Cannot send email. Configure an email account.")
                 }

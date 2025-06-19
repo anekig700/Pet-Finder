@@ -409,7 +409,7 @@ class OrganizationDetailsViewController: UIViewController {
     }
     
     @objc func seeAllTapped() {
-        navigationController?.pushViewController(AnimalListViewController(viewModel: AnimalListViewModel(query: "?organization=\(organization.id)")), animated: false)
+        navigationController?.pushViewController(AnimalListViewController(viewModel: AnimalListViewModel(query: "?organization=\(organization.id)")), animated: true)
     }
 }
 
@@ -460,7 +460,7 @@ extension OrganizationDetailsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         if let animal = viewModel.animal(at: indexPath.row) {
-            navigationController?.pushViewController(AnimalDetailsViewController(viewModel: AnimalDetailsViewModel(animal: animal)), animated: false)
+            navigationController?.pushViewController(AnimalDetailsViewController(viewModel: AnimalDetailsViewModel(animal: animal)), animated: true)
         }
     }
 }
