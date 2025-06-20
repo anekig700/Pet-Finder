@@ -250,7 +250,7 @@ class AnimalDetailsViewController: UIViewController {
             mapContainer.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 16),
             mapContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: UIConstants.Padding.horizontal),
             mapContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -UIConstants.Padding.horizontal),
-            mapContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -38),
+            mapContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -62),
             adoptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.Padding.horizontal),
             adoptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.Padding.horizontal),
             adoptButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),

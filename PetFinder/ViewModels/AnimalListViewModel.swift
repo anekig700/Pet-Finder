@@ -32,6 +32,19 @@ final class AnimalListViewModel: ObservableObject {
         }
     }
     
+    var cellViewModels: [AnimalCellViewModel] {
+        animals.map {
+            AnimalCellViewModel(
+                name: $0.name,
+                age: $0.age,
+                size: $0.size,
+                gender: $0.gender,
+                breeds: $0.breeds.primary,
+                photo: $0.photos.first?.medium ?? ""
+            )
+        }
+    }
+    
     func numberOfAnimals() -> Int {
         animals.count
     }

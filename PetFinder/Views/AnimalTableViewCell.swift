@@ -142,16 +142,16 @@ class AnimalTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with animal: Animal) {
-        currentImagePath = animal.photos.first?.medium ?? ""
-        nameLabel.text = animal.name
-        ageLabel.text = "  " + animal.age + "  "
-        weightLabel.text = "  " + animal.size + "  "
-        genderLabel.text = "  " + animal.gender + "  "
-        breedLabel.text = animal.breeds.primary
+    func configure(with viewModel: AnimalCellViewModel) {
+        currentImagePath = viewModel.photo
+        nameLabel.text = viewModel.name
+        ageLabel.text = "  " + viewModel.age + "  "
+        weightLabel.text = "  " + viewModel.size + "  "
+        genderLabel.text = "  " + viewModel.gender + "  "
+        breedLabel.text = viewModel.breeds
         
-        imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { [weak self] (image) in
-            if self?.currentImagePath == animal.photos.first?.medium ?? "" {
+        imageLoader.obtainImageWithPath(imagePath: currentImagePath ?? "") { [weak self] (image) in
+            if self?.currentImagePath == viewModel.photo {
                 self?.animalImage.image = image
             }
         }

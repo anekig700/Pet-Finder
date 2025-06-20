@@ -70,8 +70,8 @@ extension AnimalListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        if let animal = viewModel.animal(at: indexPath.row) {
-            cell.configure(with: animal)
+        if let _ = viewModel.animal(at: indexPath.row) {
+            cell.configure(with: viewModel.cellViewModels[indexPath.row])
         }
         
         return cell
