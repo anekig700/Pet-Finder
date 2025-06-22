@@ -44,7 +44,7 @@ class AnimalListViewController: UIViewController {
     func setupTableView() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.layer.cornerRadius = UIConstants.CornerRadiuses.block
+        tableView.backgroundColor = UIConstants.Colors.mainBackground
         tableView.separatorStyle = .none
         
         NSLayoutConstraint.activate([
