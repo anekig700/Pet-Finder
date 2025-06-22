@@ -1,24 +1,30 @@
 //
-//  AnimalListViewModel.swift
+//  AnimalListVM.swift
 //  PetFinder
 //
-//  Created by Kotya on 23/04/2025.
+//  Created by Kotya on 22/06/2025.
 //
 
-import Combine
 import Foundation
 
-final class AnimalListViewModel: ObservableObject {
+final class AnimalListVM {
+    
+    var viewModelDidChange: (() -> Void)?
 
-    @Published private(set) var animals: [Animal] = []
-
+    private var animals: [Animal] = []
     private let service: AnimalServiceProtocol
 
     init(service: AnimalServiceProtocol = AnimalService(), query: String? = nil) {
         self.service = service
-
+        
+        print("🐱 1) VM -> init")
         retrieveAnimals(with: query)
     }
+    
+    // alternative approach instead of assigning the body to `viewModelDidChange`
+//    func bind(_ viewModelDidChange: @escaping (() -> Void)) {
+//        self.viewModelDidChange = viewModelDidChange
+//    }
 
     private func retrieveAnimals(with query: String? = nil) {
         service.fetchInfo(path: Endpoint.animals.rawValue + (query ?? "")) { [weak self] (result: Result<Animals, Error>) in
@@ -28,6 +34,10 @@ final class AnimalListViewModel: ObservableObject {
             case .failure(let error):
                 self?.animals = []
                 print("Error retrieving animals: \(error)")
+            }
+            
+            DispatchQueue.main.async {
+                self?.viewModelDidChange?()
             }
         }
     }
@@ -55,5 +65,3 @@ final class AnimalListViewModel: ObservableObject {
     }
     
 }
-
-
