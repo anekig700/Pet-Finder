@@ -8,39 +8,23 @@
 import Foundation
 
 final class AnimalListVM {
-    
-    var viewModelDidChange: (() -> Void)?
-
+        
     private var animals: [Animal] = []
     private let service: AnimalServiceProtocol
-
+    private let query: String?
+    
     init(service: AnimalServiceProtocol = AnimalService(), query: String? = nil) {
         self.service = service
-        
-        print("🐱 1) VM -> init")
-        retrieveAnimals(with: query)
+        self.query = query
     }
+    
+    // MARK: - Public
+    var viewModelDidChange: (() -> Void)?
     
     // alternative approach instead of assigning the body to `viewModelDidChange`
 //    func bind(_ viewModelDidChange: @escaping (() -> Void)) {
 //        self.viewModelDidChange = viewModelDidChange
 //    }
-
-    private func retrieveAnimals(with query: String? = nil) {
-        service.fetchInfo(path: Endpoint.animals.rawValue + (query ?? "")) { [weak self] (result: Result<Animals, Error>) in
-            switch result {
-            case .success(let animals):
-                self?.animals = animals.animals
-            case .failure(let error):
-                self?.animals = []
-                print("Error retrieving animals: \(error)")
-            }
-            
-            DispatchQueue.main.async {
-                self?.viewModelDidChange?()
-            }
-        }
-    }
     
     var cellViewModels: [AnimalCellViewModel] {
         animals.map {
@@ -55,6 +39,10 @@ final class AnimalListVM {
         }
     }
     
+    func viewDidLoad() {
+        retrieveAnimals(with: query)
+    }
+    
     func numberOfAnimals() -> Int {
         animals.count
     }
@@ -62,6 +50,23 @@ final class AnimalListVM {
     func animal(at index: Int) -> Animal? {
         guard animals.indices.contains(index) else { return nil }
         return animals[index]
+    }
+    
+    // MARK: - Private
+    private func retrieveAnimals(with query: String? = nil) {
+        service.fetchInfo(path: Endpoint.animals.rawValue + (query ?? "")) { [weak self] (result: Result<Animals, Error>) in
+            switch result {
+            case .success(let animals):
+                self?.animals = animals.animals
+            case .failure(let error):
+                self?.animals = []
+                print("Error retrieving animals: \(error)")
+            }
+            
+            DispatchQueue.main.async {
+                self?.viewModelDidChange?()
+            }
+        }
     }
     
 }

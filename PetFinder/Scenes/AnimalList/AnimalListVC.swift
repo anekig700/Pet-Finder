@@ -17,7 +17,6 @@ class AnimalListVC: UIViewController {
     
     init(viewModel: AnimalListVM = AnimalListVM()) {
         self.viewModel = viewModel
-        print("🐱 2) VC -> init")
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -27,17 +26,17 @@ class AnimalListVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        viewModel.viewModelDidChange = { [weak self] in
+            // the body is waiting for execution
+            self?.tableView.reloadData()
+        }
+        
         view.backgroundColor = UIConstants.Colors.mainBackground
         safeArea = view.layoutMarginsGuide
         setupTableView()
         
-        print("🐱 3) VC -> viewDidLoad")
-        
-        viewModel.viewModelDidChange = { [weak self] in
-            // the body is waiting for execution
-            print("🐱 4) VC -> CLOSURE BODY")
-            self?.tableView.reloadData()
-        }
+        viewModel.viewDidLoad()
     }
 
     func setupTableView() {
