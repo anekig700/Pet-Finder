@@ -31,6 +31,10 @@ class AnimalListVC: UIViewController {
             // the body is waiting for execution
             self?.tableView.reloadData()
         }
+        // alternative approach instead of assigning the body to `viewModelDidChange`
+//        viewModel.bind { [weak self] in
+//            self?.tableView.reloadData()
+//        }
         
         view.backgroundColor = UIConstants.Colors.mainBackground
         safeArea = view.layoutMarginsGuide
@@ -80,7 +84,7 @@ extension AnimalListVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let animal = viewModel.animal(at: indexPath.row) {
-            navigationController?.pushViewController(AnimalDetailsViewController(viewModel: AnimalDetailsViewModel(animal: animal)), animated: true)
+            navigationController?.pushViewController(AnimalDetailsVC(viewModel: AnimalDetailsVM(animal: animal)), animated: true)
         }
     }
 }
