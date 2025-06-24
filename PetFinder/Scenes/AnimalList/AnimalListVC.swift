@@ -15,7 +15,7 @@ class AnimalListVC: UIViewController {
     private let viewModel: AnimalListVM
     private let imageLoader = ImageLoader()
     
-    init(viewModel: AnimalListVM = AnimalListVM()) {
+    init(viewModel: AnimalListVM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -83,8 +83,7 @@ extension AnimalListVC: UITableViewDataSource {
 extension AnimalListVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let animal = viewModel.animal(at: indexPath.row) {
-            navigationController?.pushViewController(AnimalDetailsVC(viewModel: AnimalDetailsVM(animal: animal)), animated: true)
-        }
+        
+        viewModel.animalCellDidTap(at: indexPath.row)
     }
 }

@@ -12,10 +12,12 @@ final class AnimalListVM {
     private var animals: [Animal] = []
     private let service: AnimalServiceProtocol
     private let query: String?
+    private let router: AnimalListRouting
     
-    init(service: AnimalServiceProtocol = AnimalService(), query: String? = nil) {
+    init(service: AnimalServiceProtocol = AnimalService(), query: String? = nil, router: AnimalListRouting) {
         self.service = service
         self.query = query
+        self.router = router
     }
     
     // MARK: - Public
@@ -50,6 +52,13 @@ final class AnimalListVM {
     func animal(at index: Int) -> Animal? {
         guard animals.indices.contains(index) else { return nil }
         return animals[index]
+    }
+    
+    func animalCellDidTap(at index: Int) {
+        guard let selectedAnimal = animal(at: index) else {
+            return
+        }
+        router.openAnimalDetails(with: selectedAnimal)
     }
     
     // MARK: - Private
