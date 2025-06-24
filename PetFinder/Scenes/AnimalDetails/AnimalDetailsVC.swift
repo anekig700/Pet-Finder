@@ -317,9 +317,7 @@ class AnimalDetailsVC: UIViewController {
     }
     
     @objc func horizontalStackViewTapped() {
-        guard let organization = viewModel.organizationDetails else { return }
-        let newVC = OrganizationDetailsViewController(organization: organization.organization)
-        navigationController?.pushViewController(newVC, animated: true)
+        viewModel.organizationDetailsInfoStackDidTap()
     }
     
     @objc func mapViewTapped() {

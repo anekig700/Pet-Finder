@@ -17,8 +17,14 @@ class AnimalListRouter: AnimalListRouting {
     weak var navigationController: UINavigationController?
     
     func openAnimalDetails(with animal: Animal) {
-        let animalDetailsVM = AnimalDetailsVM(animal: animal)
+        guard let navigationController else {
+            return
+        }
+        
+        let animalDetailsRouter = AnimalDetailsRouter(navigationController: navigationController)
+        let animalDetailsVM = AnimalDetailsVM(animal: animal, router: animalDetailsRouter)
         let animalDetailsVC = AnimalDetailsVC(viewModel: animalDetailsVM)
-        navigationController?.pushViewController(animalDetailsVC, animated: true)
+        
+        navigationController.pushViewController(animalDetailsVC, animated: true)
     }
 }

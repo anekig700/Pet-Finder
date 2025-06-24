@@ -13,10 +13,12 @@ final class AnimalDetailsVM {
     private(set) var animal: Animal
 
     private let service: AnimalServiceProtocol
+    private let router: AnimalDetailsRouting
 
-    init(service: AnimalServiceProtocol = AnimalService(), animal: Animal) {
+    init(service: AnimalServiceProtocol = AnimalService(), animal: Animal, router: AnimalDetailsRouting) {
         self.service = service
         self.animal = animal
+        self.router = router
     }
     
     var viewModelDidChange: (() -> Void)?
@@ -42,5 +44,10 @@ final class AnimalDetailsVM {
     
     func viewDidLoad() {
         retrieveOrganization(id: animal.organization_id)
+    }
+    
+    func organizationDetailsInfoStackDidTap() {
+        guard let organization = organization() else { return }
+        router.openOrganizationDetails(with: organization)
     }
 }
