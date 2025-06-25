@@ -11,22 +11,6 @@ protocol AnimalServiceProtocol {
     func fetchInfo<T: Decodable>(path: String, completion: @escaping (Result<T, Error>) -> Void)
 }
 
-class MockNetworkService: AnimalServiceProtocol {
-    var result: Any?
-
-    func fetchInfo<T: Decodable>(path: String, completion: @escaping (Result<T, Error>) -> Void) {
-        if let result = result as? T {
-            completion(.success(result))
-        } else {
-            completion(.failure(MockError.decodingFailed))
-        }
-    }
-
-    enum MockError: Error {
-        case decodingFailed
-    }
-}
-
 enum Endpoint: String {
     case animals = "/v2/animals"
     case organizations = "/v2/organizations"
