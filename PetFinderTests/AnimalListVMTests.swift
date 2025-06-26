@@ -38,7 +38,20 @@ final class AnimalListVMTests: XCTestCase {
     }
     
     func testAnimalCellDidTap_AtIncorrectIndex_DoesNotCallRouter() {
-        // TODO: Implement
+        // given
+        networkServiceMock.result = Animals(animals: [
+            Animal(id: 1, name: "Breeze", age: "20", size: "small", gender: "xl", breeds: .init(primary: "Terrier"), photos: [], description: nil, contact: .init(email: nil, phone: nil, address: .init(city: nil, state: nil, postcode: nil)), organization_id: "i"),
+            Animal(id: 2, name: "Perry", age: "20", size: "small", gender: "xl", breeds: .init(primary: "Domestic Short Hair"), photos: [], description: nil, contact: .init(email: nil, phone: nil, address: .init(city: nil, state: nil, postcode: nil)), organization_id: "i")
+        ])
+        let index = 2
+        
+        sut.viewDidLoad()
+        
+        // when
+        sut.animalCellDidTap(at: index)
+        
+        // then
+        XCTAssertEqual(routerSpy.calls, [])
     }
     
 }
