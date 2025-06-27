@@ -44,22 +44,28 @@ final class AnimalService: AnimalServiceProtocol {
     }
 
     func fetchInfo<T>(path: String, completion: @escaping (Result<T, any Error>) -> Void) where T : Decodable {
-        guard let url = URL(string: baseUrlString + path) else { return }
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(authTokenString)", forHTTPHeaderField: "Authorization")
+        TokenService.shared.getToken { [weak self] token in
+            guard let token = token, let self = self else { return }
+            
+            guard let url = URL(string: baseUrlString + path) else { return }
+            
+            var request = URLRequest(url: url)
+//            request.setValue("Bearer \(authTokenString)", forHTTPHeaderField: "Authorization")
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        urlSession.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                completion(.failure(error))
-                print(error)
-            }
+            urlSession.dataTask(with: request) { (data, response, error) in
+                if let error = error {
+                    completion(.failure(error))
+                    print(error)
+                }
 
-            do {
-                let returnType = try JSONDecoder().decode(T.self, from: data!)
-                completion(.success(returnType))
-            } catch let error {
-                completion(.failure(error))
-            }
-        }.resume()
+                do {
+                    let returnType = try JSONDecoder().decode(T.self, from: data!)
+                    completion(.success(returnType))
+                } catch let error {
+                    completion(.failure(error))
+                }
+            }.resume()
+        }
     }
 }
