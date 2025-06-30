@@ -16,3 +16,23 @@ struct AnimalCellViewModel {
     let breeds: String
     let photo: String
 }
+
+extension AnimalCellViewModel {
+    init(animal: Animal) {
+        self.init(
+            name: animal.name,
+            age: animal.age,
+            size: animal.size,
+            gender: animal.gender,
+            breeds: animal.breeds.primary,
+            photo: animal.photos.first?.medium ?? ""
+        )
+        
+//        self.name = animal.name
+//        self.age = animal.age
+//        self.size = animal.size
+//        self.gender = animal.gender
+//        self.breeds = animal.breeds.primary
+//        self.photo = animal.photos.first?.medium ?? ""
+    }
+}

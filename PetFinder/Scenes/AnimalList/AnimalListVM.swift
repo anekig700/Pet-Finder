@@ -29,16 +29,8 @@ final class AnimalListVM {
 //    }
     
     var cellViewModels: [AnimalCellViewModel] {
-        animals.map {
-            AnimalCellViewModel(
-                name: $0.name,
-                age: $0.age,
-                size: $0.size,
-                gender: $0.gender,
-                breeds: $0.breeds.primary,
-                photo: $0.photos.first?.medium ?? ""
-            )
-        }
+//        animals.map { AnimalCellViewModel(animal: $0) }
+        animals.map(AnimalCellViewModel.init(animal:))
     }
     
     func viewDidLoad() {
@@ -49,11 +41,6 @@ final class AnimalListVM {
         animals.count
     }
     
-    func animal(at index: Int) -> Animal? {
-        guard animals.indices.contains(index) else { return nil }
-        return animals[index]
-    }
-    
     func animalCellDidTap(at index: Int) {
         guard let selectedAnimal = animal(at: index) else {
             return
@@ -62,6 +49,11 @@ final class AnimalListVM {
     }
     
     // MARK: - Private
+    private func animal(at index: Int) -> Animal? {
+        guard animals.indices.contains(index) else { return nil }
+        return animals[index]
+    }
+    
     private func retrieveAnimals(with query: String? = nil) {
         service.fetchInfo(path: Endpoint.animals.rawValue + (query ?? "")) { [weak self] (result: Result<Animals, Error>) in
             switch result {

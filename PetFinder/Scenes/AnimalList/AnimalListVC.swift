@@ -72,8 +72,9 @@ extension AnimalListVC: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        if let _ = viewModel.animal(at: indexPath.row) {
-            cell.configure(with: viewModel.cellViewModels[indexPath.row])
+        let cellViewModels = viewModel.cellViewModels
+        if !cellViewModels.isEmpty {
+            cell.configure(with: cellViewModels[indexPath.row])
         }
         
         return cell
