@@ -127,11 +127,12 @@ class AnimalDetailsViewController: UIViewController {
         setupView()
         fillView()
         
-        viewModel.objectWillChange
+        viewModel.$organizationViewModelState
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.organizationNameLabel.text = self?.viewModel.organization()?.name
-                self?.imageLoader.obtainImageWithPath(imagePath: self?.viewModel.organization()?.photos.first?.medium ?? "") { (image) in
+            .sink { [weak self] organizationViewModelState in
+                self?.organizationNameLabel.text = organizationViewModelState?.organizationName
+                self?.imageLoader.obtainImageWithPath(imagePath: organizationViewModelState?.organizationLogo ?? "")
+                { (image) in
                     self?.organizationLogo.image = image
                 }
         }.store(in: &cancellables)
@@ -320,9 +321,9 @@ class AnimalDetailsViewController: UIViewController {
     }
     
     @objc func horizontalStackViewTapped() {
-        guard let organization = viewModel.organizationDetails else { return }
-        let newVC = OrganizationDetailsViewController(organization: organization.organization)
-        navigationController?.pushViewController(newVC, animated: true)
+        guard let organization = viewModel.organization() else { return }
+        let organizationDetailsVC = OrganizationDetailsViewController(organization: organization)
+        navigationController?.pushViewController(organizationDetailsVC, animated: true)
     }
     
     @objc func mapViewTapped() {

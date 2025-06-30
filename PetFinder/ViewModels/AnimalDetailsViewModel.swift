@@ -10,7 +10,8 @@ import Foundation
 
 final class AnimalDetailsViewModel: ObservableObject {
 
-    @Published private(set) var organizationDetails: OrganizationDetails?
+    @Published private(set) var organizationViewModelState: OrganizationBasicInfoViewState?
+    private(set) var organizationDetails: OrganizationDetails?
     private(set) var animal: Animal
 
     private let service: AnimalServiceProtocol
@@ -26,6 +27,10 @@ final class AnimalDetailsViewModel: ObservableObject {
             switch result {
             case .success(let organization):
                 self?.organizationDetails = organization
+                self?.organizationViewModelState = OrganizationBasicInfoViewState(
+                    organizationName: self?.organization()?.name ?? "",
+                    organizationLogo: self?.organization()?.photos.first?.medium ?? ""
+                )
             case .failure(let error):
                 print("Error retrieving organization: \(error)")
             }
