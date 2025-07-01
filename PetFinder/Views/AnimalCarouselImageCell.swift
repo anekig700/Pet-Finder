@@ -38,8 +38,8 @@ class AnimalCarouselImageCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with animal: Animal, at index: Int) {
-        imageLoader.obtainImageWithPath(imagePath: animal.photos[index].medium) { [weak self] (image) in
+    func configure(with state: AnimalDetailsViewState, at index: Int) {
+        imageLoader.obtainImageWithPath(imagePath: state.photos[index].medium) { [weak self] (image) in
             self?.photoImageView.image = image
         }
     }

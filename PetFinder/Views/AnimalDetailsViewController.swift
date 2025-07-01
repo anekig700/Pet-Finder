@@ -258,23 +258,14 @@ class AnimalDetailsViewController: UIViewController {
         ])
     }
     
-    private var showAdoptButton: Bool {
-        if viewModel.animal.contact.email != nil {
-            return true
-        } else if viewModel.animal.contact.phone != nil {
-            return true
-        }
-        return false
-    }
-    
     func fillView() {
-        photoCollectionView.isHidden = viewModel.animal.photos.isEmpty
-        photoPageControl.numberOfPages = viewModel.animal.photos.count
-        photoPageControl.isHidden = viewModel.animal.photos.count <= 1
-        nameLabel.text = viewModel.animal.name
-        descriptionLabel.text = viewModel.animal.description
-        adoptButton.isHidden = !showAdoptButton
-        if let fullAddress = viewModel.animal.contact.address.fullAddress {
+        photoCollectionView.isHidden = viewModel.animalViewModelState.photos.isEmpty
+        photoPageControl.numberOfPages = viewModel.animalViewModelState.photosCount
+        photoPageControl.isHidden = viewModel.animalViewModelState.photosCount <= 1
+        nameLabel.text = viewModel.animalViewModelState.name
+        descriptionLabel.text = viewModel.animalViewModelState.description
+        adoptButton.isHidden = !viewModel.animalViewModelState.shouldShowContactButton
+        if let fullAddress = viewModel.animalViewModelState.address {
             mapView.isHidden = false
             mapView.showAddressOnMap(fullAddress)
         }   
@@ -285,7 +276,7 @@ class AnimalDetailsViewController: UIViewController {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
-        if let phoneNumber = viewModel.animal.contact.phone {
+        if let phoneNumber = viewModel.animalViewModelState.phone {
             let callAction = UIAlertAction(title: "Call \(phoneNumber)", style: .default) { _ in
                 if let phoneURL = URL(string: "tel://\(phoneNumber)"),
                    UIApplication.shared.canOpenURL(phoneURL) {
@@ -298,14 +289,14 @@ class AnimalDetailsViewController: UIViewController {
             alert.addAction(callAction)
         }
         
-        if let emailAddress = viewModel.animal.contact.email {
+        if let emailAddress = viewModel.animalViewModelState.email {
             let emailAction = UIAlertAction(title: "Email \(emailAddress)", style: .default) { [weak self] _ in
                 if MFMailComposeViewController.canSendMail() {
                     guard let self = self else { return }
                     let mailVC = MFMailComposeViewController()
                     mailVC.mailComposeDelegate = self
                     mailVC.setToRecipients([emailAddress])
-                    mailVC.setSubject("Adopt \(self.viewModel.animal.name)")
+                    mailVC.setSubject("Adopt \(self.viewModel.animalViewModelState.name)")
                     mailVC.setMessageBody("Hi there,", isHTML: false)
                     self.present(mailVC, animated: true)
                 } else {
@@ -327,7 +318,7 @@ class AnimalDetailsViewController: UIViewController {
     }
     
     @objc func mapViewTapped() {
-        guard let address = viewModel.animal.contact.address.fullAddress else { return }
+        guard let address = viewModel.animalViewModelState.address else { return }
         geocodeAndOpenInMaps(address)
     }
 }
@@ -348,14 +339,14 @@ extension AnimalDetailsViewController: MFMailComposeViewControllerDelegate {
 
 extension AnimalDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.animal.photos.count
+        viewModel.animalViewModelState.photosCount
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "carouselImageCell", for: indexPath) as? AnimalCarouselImageCell else {
             return UICollectionViewCell()
         }
-        cell.configure(with: viewModel.animal, at: indexPath.row)
+        cell.configure(with: viewModel.animalViewModelState, at: indexPath.row)
         
         return cell
     }

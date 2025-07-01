@@ -12,13 +12,13 @@ final class AnimalDetailsViewModel: ObservableObject {
 
     @Published private(set) var organizationViewModelState: OrganizationBasicInfoViewState?
     private(set) var organizationDetails: OrganizationDetails?
-    private(set) var animal: Animal
+    private(set) var animalViewModelState: AnimalDetailsViewState
 
     private let service: AnimalServiceProtocol
 
     init(service: AnimalServiceProtocol = AnimalService(), animal: Animal) {
         self.service = service
-        self.animal = animal
+        self.animalViewModelState = .init(animal: animal)
         retrieveOrganization(id: animal.organization_id)
     }
 
