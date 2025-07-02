@@ -12,6 +12,7 @@ class AnimalListViewController: UIViewController {
     
     let tableView = UITableView()
     var safeArea: UILayoutGuide!
+    let refreshControl = UIRefreshControl()
     let imageLoader = ImageLoader()
     
     private var cancellables: Set<AnyCancellable> = []
@@ -36,7 +37,16 @@ class AnimalListViewController: UIViewController {
         viewModel.objectWillChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-            self?.tableView.reloadData()
+                self?.tableView.reloadData()
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if !isLoading {
+                    self?.refreshControl.endRefreshing()
+                }
             }
             .store(in: &cancellables)
     }
@@ -46,6 +56,8 @@ class AnimalListViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = UIConstants.Colors.mainBackground
         tableView.separatorStyle = .none
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
@@ -57,6 +69,10 @@ class AnimalListViewController: UIViewController {
         tableView.register(AnimalTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.dataSource = self
         tableView.delegate = self
+    }
+    
+    @objc private func handleRefresh() {
+        viewModel.retrieveAnimals()
     }
 }
 

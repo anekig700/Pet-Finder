@@ -11,6 +11,7 @@ import Foundation
 final class AnimalListViewModel: ObservableObject {
 
     @Published private(set) var animals: [Animal] = []
+    @Published var isLoading: Bool = false
 
     private let service: AnimalServiceProtocol
 
@@ -21,7 +22,13 @@ final class AnimalListViewModel: ObservableObject {
     }
 
     func retrieveAnimals(with query: String? = nil) {
+        
+        isLoading = true
+        
         service.fetchInfo(path: Endpoint.animals.rawValue + (query ?? "")) { [weak self] (result: Result<Animals, Error>) in
+            
+            self?.isLoading = false
+            
             switch result {
             case .success(let animals):
                 self?.animals = animals.animals
