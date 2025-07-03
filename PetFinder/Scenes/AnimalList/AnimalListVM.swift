@@ -64,10 +64,9 @@ final class AnimalListVM {
                 print("Error retrieving animals: \(error)")
             }
             
-            DispatchQueue.main.async {
+            DispatchQueue.asyncOnMainIfNecessary {
                 self?.viewModelDidChange?()
             }
         }
     }
-    
 }

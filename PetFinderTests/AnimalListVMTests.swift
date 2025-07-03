@@ -22,28 +22,30 @@ final class AnimalListVMTests: XCTestCase {
     
     func testViewDidLoad_LoadsData() {
         // given
-        let networkServiceSpy = NetworkServiceSpy()
-        routerSpy = AnimalListRouterSpy()
-        sut = AnimalListVM(service: networkServiceSpy, query: nil, router: routerSpy)
+        var viewModelDidChangeCalled = false
+        sut.viewModelDidChange = {
+            viewModelDidChangeCalled = true
+        }
         
         // when
         sut.viewDidLoad()
         
         // then
-        XCTAssertEqual(networkServiceSpy.calls, [.retrieveAnimals(path: "/v2/animals")])
+        XCTAssertEqual(networkServiceMock.calls, [.retrieveAnimals(path: "/v2/animals")])
+        XCTAssertTrue(viewModelDidChangeCalled)
     }
     
     func testViewDidLoad_LoadsData_WithQuery() {
         // given
-        let networkServiceSpy = NetworkServiceSpy()
+        let networkServiceMock = NetworkServiceMock()
         routerSpy = AnimalListRouterSpy()
-        sut = AnimalListVM(service: networkServiceSpy, query: "?test=1", router: routerSpy)
+        sut = AnimalListVM(service: networkServiceMock, query: "?test=1", router: routerSpy)
         
         // when
         sut.viewDidLoad()
         
         // then
-        XCTAssertEqual(networkServiceSpy.calls, [.retrieveAnimals(path: "/v2/animals?test=1")])
+        XCTAssertEqual(networkServiceMock.calls, [.retrieveAnimals(path: "/v2/animals?test=1")])
     }
     
     func testNumberOfAnimals_WhenDataIsLoaded() {
