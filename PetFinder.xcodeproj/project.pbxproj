@@ -26,6 +26,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				PetFinder.xctestplan,
 			);
 			target = 8B3EE0382DB1492300232CAD /* PetFinder */;
 		};

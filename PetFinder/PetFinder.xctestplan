@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "2EC35D9D-423B-4385-A620-0A22638613AE",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:PetFinder.xcodeproj",
+      "identifier" : "8B3EE0382DB1492300232CAD",
+      "name" : "PetFinder"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:PetFinder.xcodeproj",
+        "identifier" : "8B8A40E62DF22F9B008CA502",
+        "name" : "PetFinderTests"
+      }
+    }
+  ],
+  "version" : 1
+}

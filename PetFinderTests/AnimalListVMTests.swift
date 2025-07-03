@@ -20,18 +20,70 @@ final class AnimalListVMTests: XCTestCase {
         sut = AnimalListVM(service: networkServiceMock, query: nil, router: routerSpy)
     }
     
+    func testViewDidLoad_LoadsData() {
+        // given
+        let networkServiceSpy = NetworkServiceSpy()
+        routerSpy = AnimalListRouterSpy()
+        sut = AnimalListVM(service: networkServiceSpy, query: nil, router: routerSpy)
+        
+        // when
+        sut.viewDidLoad()
+        
+        // then
+        XCTAssertEqual(networkServiceSpy.calls, [.retrieveAnimals(path: "/v2/animals")])
+    }
+    
+    func testViewDidLoad_LoadsData_WithQuery() {
+        // given
+        let networkServiceSpy = NetworkServiceSpy()
+        routerSpy = AnimalListRouterSpy()
+        sut = AnimalListVM(service: networkServiceSpy, query: "?test=1", router: routerSpy)
+        
+        // when
+        sut.viewDidLoad()
+        
+        // then
+        XCTAssertEqual(networkServiceSpy.calls, [.retrieveAnimals(path: "/v2/animals?test=1")])
+    }
+    
+    func testNumberOfAnimals_WhenDataIsLoaded() {
+        // given
+        let animals = [
+            Animal(id: 1, name: "Breeze", age: "20", size: "small", gender: "xl", breeds: .init(primary: "Terrier"), photos: [], description: nil, contact: .init(email: nil, phone: nil, address: .init(city: nil, state: nil, postcode: nil)), organization_id: "i"),
+            Animal(id: 2, name: "Perry", age: "20", size: "small", gender: "xl", breeds: .init(primary: "Domestic Short Hair"), photos: [], description: nil, contact: .init(email: nil, phone: nil, address: .init(city: nil, state: nil, postcode: nil)), organization_id: "i")
+        ]
+        networkServiceMock.result = Animals(animals: animals)
+        
+        // when
+        sut.viewDidLoad()
+        
+        // then
+        XCTAssertEqual(sut.numberOfAnimals(), animals.count)
+    }
+    
+    func testNumberOfAnimals_WhenDataIsNotLoaded() {
+        // given
+        networkServiceMock.result = ""
+        
+        // when
+        sut.viewDidLoad()
+        
+        // then
+        XCTAssertEqual(sut.numberOfAnimals(), 0)
+    }
+    
     func testAnimalCellDidTap_AtCorrectIndex_CallsRouter() {
         // given
         networkServiceMock.result = Animals(animals: [
             Animal(id: 1, name: "Breeze", age: "20", size: "small", gender: "xl", breeds: .init(primary: "Terrier"), photos: [], description: nil, contact: .init(email: nil, phone: nil, address: .init(city: nil, state: nil, postcode: nil)), organization_id: "i"),
             Animal(id: 2, name: "Perry", age: "20", size: "small", gender: "xl", breeds: .init(primary: "Domestic Short Hair"), photos: [], description: nil, contact: .init(email: nil, phone: nil, address: .init(city: nil, state: nil, postcode: nil)), organization_id: "i")
         ])
-        let index = 0
+        let correctIndex = 0
         
         sut.viewDidLoad()
         
         // when
-        sut.animalCellDidTap(at: index)
+        sut.animalCellDidTap(at: correctIndex)
         
         // then
         XCTAssertEqual(routerSpy.calls, [.openAnimalDetails])
@@ -43,12 +95,12 @@ final class AnimalListVMTests: XCTestCase {
             Animal(id: 1, name: "Breeze", age: "20", size: "small", gender: "xl", breeds: .init(primary: "Terrier"), photos: [], description: nil, contact: .init(email: nil, phone: nil, address: .init(city: nil, state: nil, postcode: nil)), organization_id: "i"),
             Animal(id: 2, name: "Perry", age: "20", size: "small", gender: "xl", breeds: .init(primary: "Domestic Short Hair"), photos: [], description: nil, contact: .init(email: nil, phone: nil, address: .init(city: nil, state: nil, postcode: nil)), organization_id: "i")
         ])
-        let index = 2
+        let outOfBoundsIndex = 2
         
         sut.viewDidLoad()
         
         // when
-        sut.animalCellDidTap(at: index)
+        sut.animalCellDidTap(at: outOfBoundsIndex)
         
         // then
         XCTAssertEqual(routerSpy.calls, [])
