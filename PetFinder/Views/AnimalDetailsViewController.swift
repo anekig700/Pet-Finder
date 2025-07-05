@@ -31,6 +31,7 @@ class AnimalDetailsViewController: UIViewController {
     private var scrollView = UIScrollView()
     private var contentView = UIView()
     private var photoCollectionView: UICollectionView!
+    private let activityIndicator = UIActivityIndicatorView(style: .medium)
     
     let nameLabel: UILabel = {
         let label = UILabel()
@@ -60,6 +61,7 @@ class AnimalDetailsViewController: UIViewController {
         label.textColor = .black
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        label.isHidden = true
         return label
     }()
     
@@ -72,6 +74,7 @@ class AnimalDetailsViewController: UIViewController {
         imageView.layer.borderWidth = 1
         imageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        imageView.isHidden = true
         return imageView
     }()
     
@@ -83,6 +86,7 @@ class AnimalDetailsViewController: UIViewController {
         imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
         imageView.setContentHuggingPriority(.required, for: .horizontal)
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+        imageView.isHidden = true
         return imageView
     }()
     
@@ -135,7 +139,22 @@ class AnimalDetailsViewController: UIViewController {
                 { (image) in
                     self?.organizationLogo.image = image
                 }
-        }.store(in: &cancellables)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.activityIndicator.startAnimating()
+                } else {
+                    self?.activityIndicator.stopAnimating()
+                    self?.chevron.isHidden = false
+                    self?.organizationLogo.isHidden = false
+                    self?.organizationNameLabel.isHidden = false
+                }
+            }
+            .store(in: &cancellables)
     }
     
     private func prepareCollectionView() {
@@ -168,7 +187,8 @@ class AnimalDetailsViewController: UIViewController {
             organizationLogo,
             organizationNameLabel,
             chevron,
-            rightSpacer
+            rightSpacer,
+            activityIndicator
         ])
         horizontalStackView.alignment = .center
         horizontalStackView.distribution = .fill
@@ -177,6 +197,10 @@ class AnimalDetailsViewController: UIViewController {
         horizontalStackView.backgroundColor = .white
         horizontalStackView.layer.cornerRadius = UIConstants.CornerRadiuses.block
         horizontalStackView.clipsToBounds = true
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: horizontalStackView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: horizontalStackView.centerYAnchor)
+        ])
         
         let verticalInfoContainer: UIView = {
             let view = UIView()
@@ -225,6 +249,7 @@ class AnimalDetailsViewController: UIViewController {
         mapContainer.translatesAutoresizingMaskIntoConstraints = false
         organizationInfoContainer.translatesAutoresizingMaskIntoConstraints = false
         animalInfoContainer.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),

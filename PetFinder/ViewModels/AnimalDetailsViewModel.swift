@@ -11,6 +11,8 @@ import Foundation
 final class AnimalDetailsViewModel: ObservableObject {
 
     @Published private(set) var organizationViewModelState: OrganizationBasicInfoViewState?
+    @Published var isLoading: Bool = false
+    
     private(set) var organizationDetails: OrganizationDetails?
     private(set) var animalViewModelState: AnimalDetailsViewState
 
@@ -23,7 +25,12 @@ final class AnimalDetailsViewModel: ObservableObject {
     }
 
     private func retrieveOrganization(id: String) {
+        isLoading = true
+        
         service.fetchInfo(path: Endpoint.organizations.rawValue + "/\(id)") { [weak self] (result: Result<OrganizationDetails, Error>) in
+            
+            self?.isLoading = false
+            
             switch result {
             case .success(let organization):
                 self?.organizationDetails = organization
