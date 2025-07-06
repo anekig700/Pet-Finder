@@ -20,7 +20,7 @@ class OrganizationDetailsViewController: UIViewController {
     
     init(organization: Organization) {
         self.organization = organization
-        self.viewModel = AnimalListViewModel(query: "?organization=\(organization.id)")
+        self.viewModel = OrganizationDetailsViewModel(organization: organization)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -28,7 +28,7 @@ class OrganizationDetailsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private let viewModel: AnimalListViewModel
+    private let viewModel: OrganizationDetailsViewModel
     
     private var scrollView = UIScrollView()
     private var contentView = UIView()
@@ -150,13 +150,14 @@ class OrganizationDetailsViewController: UIViewController {
         setupView()
         fillView()
         
-        viewModel.objectWillChange
+        viewModel.animalListVM.$animals
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-            self?.animalCollectionView.reloadData()
-            self?.animalCollectionView.layoutIfNeeded()
-            self?.collectionViewHeightConstraint.constant = self?.animalCollectionView.contentSize.height ?? 0
-        }.store(in: &cancellables)
+            .sink { [weak self] _ in
+                self?.animalCollectionView.reloadData()
+                self?.animalCollectionView.layoutIfNeeded()
+                self?.collectionViewHeightConstraint.constant = self?.animalCollectionView.contentSize.height ?? 0
+            }
+            .store(in: &cancellables)
     }
     
     private func prepareCollectionView() {
@@ -198,7 +199,7 @@ class OrganizationDetailsViewController: UIViewController {
         horizontalHeaderStackView.axis = .horizontal
         horizontalHeaderStackView.spacing = 8
         
-        self.imageLoader.obtainImageWithPath(imagePath: organization.photos.first?.medium ?? "") { [weak self] (image) in
+        self.imageLoader.obtainImageWithPath(imagePath: viewModel.state.photo) { [weak self] (image) in
             self?.logoImage.image = image
         }
         
@@ -339,21 +340,12 @@ class OrganizationDetailsViewController: UIViewController {
         ])
     }
     
-    private var showAdoptButton: Bool {
-        if organization.email != nil {
-            return true
-        } else if organization.phone != nil {
-            return true
-        }
-        return false
-    }
-    
     func fillView() {
-        nameLabel.text = organization.name
-        descriptionLabel.text = organization.mission_statement
-        adoptButton.isHidden = !showAdoptButton
-        webLabel.text = organization.website
-        if let fullAddress = organization.address.fullAddress {
+        nameLabel.text = viewModel.state.name
+        descriptionLabel.text = viewModel.state.description
+        adoptButton.isHidden = !viewModel.state.shouldShowContactButton
+        webLabel.text = viewModel.state.website
+        if let fullAddress = viewModel.state.address {
             mapView.isHidden = false
             mapView.showAddressOnMap(fullAddress)
         }
@@ -364,7 +356,7 @@ class OrganizationDetailsViewController: UIViewController {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
-        if let phoneNumber = organization.phone {
+        if let phoneNumber = viewModel.state.phone {
             let callAction = UIAlertAction(title: "Call \(phoneNumber)", style: .default) { _ in
                 if let phoneURL = URL(string: "tel://\(phoneNumber)"),
                    UIApplication.shared.canOpenURL(phoneURL) {
@@ -377,7 +369,7 @@ class OrganizationDetailsViewController: UIViewController {
             alert.addAction(callAction)
         }
         
-        if let emailAddress = organization.email {
+        if let emailAddress = viewModel.state.email {
             let emailAction = UIAlertAction(title: "Email \(emailAddress)", style: .default) { _ in
                 if MFMailComposeViewController.canSendMail() {
                     let mailVC = MFMailComposeViewController()
@@ -404,7 +396,7 @@ class OrganizationDetailsViewController: UIViewController {
     }
     
     @objc func mapTapped() {
-        guard let address = organization.address.fullAddress else { return }
+        guard let address = viewModel.state.address else { return }
         geocodeAndOpenInMaps(address)
     }
     
@@ -429,15 +421,15 @@ extension OrganizationDetailsViewController: MFMailComposeViewControllerDelegate
 
 extension OrganizationDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if viewModel.numberOfAnimals() < 6 {
-            return viewModel.numberOfAnimals()
+        if viewModel.animalListVM.numberOfAnimals() < 6 {
+            return viewModel.animalListVM.numberOfAnimals()
         }
         return 6
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "animalCollectionViewCell", for: indexPath) as! AnimalCollectionViewCell
-        if let animal = viewModel.animal(at: indexPath.row) {
+        if let animal = viewModel.animalListVM.animal(at: indexPath.row) {
             cell.nameLabel.text = "  " + animal.name + "  "
             imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { (image) in
                 if let updateCell = collectionView.cellForItem(at: indexPath) as? AnimalCollectionViewCell {
@@ -445,13 +437,6 @@ extension OrganizationDetailsViewController: UICollectionViewDataSource {
                 }
             }
         }
-//        cell.nameLabel.text = animal.name
-//        imageLoader.obtainImageWithPath(imagePath: animal.photos.first?.medium ?? "") { (image) in
-//            if let updateCell = collectionView.cellForItem(at: indexPath) as? AnimalCollectionViewCell {
-//                updateCell.photoImageView.image = image
-//            }
-//        }
-//        cell.configure(with: UIImage(named: images[indexPath.item]))
         return cell
     }
 }
@@ -459,7 +444,7 @@ extension OrganizationDetailsViewController: UICollectionViewDataSource {
 extension OrganizationDetailsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        if let animal = viewModel.animal(at: indexPath.row) {
+        if let animal = viewModel.animalListVM.animal(at: indexPath.row) {
             navigationController?.pushViewController(AnimalDetailsViewController(viewModel: AnimalDetailsViewModel(animal: animal)), animated: true)
         }
     }

@@ -15,11 +15,6 @@ struct AnimalDetailsViewState {
     let email: String?
     let phone: String?
     
-    var shouldShowDescription: Bool {
-        guard let _ = description else { return false }
-        return true
-    }
-    
     var shouldShowContactButton: Bool {
         if email != nil || phone != nil {
             return true
@@ -47,9 +42,4 @@ extension AnimalDetailsViewState {
 struct OrganizationBasicInfoViewState {
     var organizationName: String
     var organizationLogo: String
-            
-//    var shouldShowOrganizationDetails: Bool {
-//        guard let _ = organizationName else { return false }
-//        return true
-//    }
 }
