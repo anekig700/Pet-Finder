@@ -74,6 +74,7 @@ class OrganizationDetailsViewController: UIViewController {
         imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
         imageView.setContentHuggingPriority(.required, for: .horizontal)
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+        imageView.isHidden = true
         return imageView
     }()
     
@@ -345,6 +346,7 @@ class OrganizationDetailsViewController: UIViewController {
         descriptionLabel.text = viewModel.state.description
         adoptButton.isHidden = !viewModel.state.shouldShowContactButton
         webLabel.text = viewModel.state.website
+        icon.isHidden = !viewModel.state.shouldShowIcon
         if let fullAddress = viewModel.state.address {
             mapView.isHidden = false
             mapView.showAddressOnMap(fullAddress)

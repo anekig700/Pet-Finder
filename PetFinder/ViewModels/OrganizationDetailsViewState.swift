@@ -22,6 +22,13 @@ struct OrganizationDetailsViewState {
         }
         return false
     }
+    
+    var shouldShowIcon: Bool {
+        if website != nil {
+            return true
+        }
+        return false
+    }
 }
 
 extension OrganizationDetailsViewState {
