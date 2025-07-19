@@ -98,7 +98,9 @@ extension AnimalListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let animal = viewModel.animal(at: indexPath.row) {
-            navigationController?.pushViewController(AnimalDetailsViewController(viewModel: AnimalDetailsViewModel(animal: animal)), animated: true)
+            let animalDetailsVC = AnimalDetailsViewController(viewModel: AnimalDetailsViewModel(animal: animal))
+            animalDetailsVC.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(animalDetailsVC, animated: true)
         }
     }
 }

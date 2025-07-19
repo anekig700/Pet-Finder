@@ -16,8 +16,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        let viewController = AnimalListViewController()
-        window?.rootViewController = UINavigationController(rootViewController: viewController)
+        
+        let animalListViewController = AnimalListViewController()
+        let animalListNavigationController = UINavigationController(rootViewController: animalListViewController)
+        animalListNavigationController.tabBarItem = UITabBarItem(title: "Animals", image: UIImage(systemName: "pawprint"), tag: 0)
+        let animalSearchViewController = AnimalListViewController()
+        let animalSearchNavigationController = UINavigationController(rootViewController: animalSearchViewController)
+        animalSearchNavigationController.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 1)
+        
+        
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [animalListNavigationController, animalSearchNavigationController]
+
+        window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
     }
     
