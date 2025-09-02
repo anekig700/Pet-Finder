@@ -30,6 +30,7 @@ class MockNetworkService: AnimalServiceProtocol {
 enum Endpoint: String {
     case animals = "/v2/animals"
     case organizations = "/v2/organizations"
+    case types = "/v2/types"
 }
 
 final class AnimalService: AnimalServiceProtocol {
