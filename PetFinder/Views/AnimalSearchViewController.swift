@@ -63,7 +63,7 @@ class AnimalSearchViewController: UIViewController {
         
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.dataSource = self
-//        tableView.delegate = self
+        collectionView.delegate = self
     }
     
 }
@@ -81,5 +81,14 @@ extension AnimalSearchViewController: UICollectionViewDataSource {
         label.text = "\(viewModel.types[indexPath.row].name)"
         cell.contentView.addSubview(label)
         return cell
+    }
+}
+
+extension AnimalSearchViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        if let animalTypeName = viewModel.type(at: indexPath.row)?.name {
+            viewModel.didSelectAnimalType(animalTypeName)
+        }
     }
 }

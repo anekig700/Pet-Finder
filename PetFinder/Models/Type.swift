@@ -11,4 +11,8 @@ struct Types: Codable {
 
 struct Type: Codable {
     let name: String
+    let colors: [String]
+    let coats: [String]
+    let genders: [String]
 }
+
