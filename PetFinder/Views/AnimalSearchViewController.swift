@@ -44,7 +44,7 @@ class AnimalSearchViewController: UIViewController {
     
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
-//        layout.scrollDirection = .horizontal
+        layout.scrollDirection = .vertical
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.layer.cornerRadius = UIConstants.CornerRadiuses.block
@@ -58,10 +58,10 @@ class AnimalSearchViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
         
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(NestedAnimalSearchCollectionViewCell.self, forCellWithReuseIdentifier: NestedAnimalSearchCollectionViewCell.identifier)
         collectionView.dataSource = self
         collectionView.delegate = self
     }
@@ -76,10 +76,9 @@ extension AnimalSearchViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        let label = UILabel(frame: cell.contentView.bounds)
-        label.text = "\(viewModel.types[indexPath.row].name)"
-        cell.contentView.addSubview(label)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NestedAnimalSearchCollectionViewCell.identifier, for: indexPath) as! NestedAnimalSearchCollectionViewCell
+        
+        cell.configure(with: viewModel.types)
         return cell
     }
 }
