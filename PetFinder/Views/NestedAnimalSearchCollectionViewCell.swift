@@ -57,10 +57,4 @@ extension NestedAnimalSearchCollectionViewCell: UICollectionViewDataSource {
         cell.configure(with: items[indexPath.row])
         return cell
     }
-    
-//    func collectionView(_ collectionView: UICollectionView,
-//                        layout collectionViewLayout: UICollectionViewLayout,
-//                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: contentView.bounds.width, height: contentView.bounds.height)
-//    }
 }
