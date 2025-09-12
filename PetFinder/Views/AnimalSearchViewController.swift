@@ -11,6 +11,8 @@ import Combine
 class AnimalSearchViewController: UIViewController {
     
     private var collectionView: UICollectionView!
+    private var heightConstraint: NSLayoutConstraint!
+    private var isExpanded = false
     
     private let viewModel: AnimalSearchViewModel
     private var cancellables: Set<AnyCancellable> = []
@@ -56,14 +58,30 @@ class AnimalSearchViewController: UIViewController {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
+        
+        heightConstraint = collectionView.heightAnchor.constraint(equalToConstant: 100)
+        heightConstraint.isActive = true
         
         collectionView.register(NestedAnimalSearchCollectionViewCell.self, forCellWithReuseIdentifier: NestedAnimalSearchCollectionViewCell.identifier)
         collectionView.dataSource = self
         collectionView.delegate = self
     }
+    
+    private func expandCollectionView() {
+            guard !isExpanded else { return }
+            isExpanded = true
+
+            UIView.animate(withDuration: 0.3) {
+                self.heightConstraint.constant = CGFloat(5) * 90
+                self.view.layoutIfNeeded()
+            }
+
+            collectionView.performBatchUpdates({
+                self.collectionView.reloadData()
+            }, completion: nil)
+        }
     
 }
 
@@ -78,16 +96,20 @@ extension AnimalSearchViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NestedAnimalSearchCollectionViewCell.identifier, for: indexPath) as! NestedAnimalSearchCollectionViewCell
         
         cell.configure(with: viewModel.types)
+        cell.onInnerCellTap = { [weak self] in
+            self?.expandCollectionView()
+        }
+        
         return cell
     }
 }
 
 extension AnimalSearchViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-        if let animalTypeName = viewModel.type(at: indexPath.row)?.name {
-            viewModel.didSelectAnimalType(animalTypeName)
-        }
+//        collectionView.deselectItem(at: indexPath, animated: true)
+//        if let animalTypeName = viewModel.type(at: indexPath.row)?.name {
+//            viewModel.didSelectAnimalType(animalTypeName)
+//        }
     }
 }
 

@@ -16,15 +16,18 @@ class NestedAnimalSearchCollectionViewCell: UICollectionViewCell {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.allowsMultipleSelection = false
         return collectionView
     }()
     
     private var items: [Type] = []
     
+    var onInnerCellTap: (() -> Void)?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(horizontalCollectionView)
-//        horizontalCollectionView.delegate = self
+        horizontalCollectionView.delegate = self
         horizontalCollectionView.dataSource = self
         horizontalCollectionView.register(InnerAnimalSearchCollectionViewCell.self, forCellWithReuseIdentifier: InnerAnimalSearchCollectionViewCell.identifier)
     }
@@ -56,5 +59,15 @@ extension NestedAnimalSearchCollectionViewCell: UICollectionViewDataSource {
         }
         cell.configure(with: items[indexPath.row])
         return cell
+    }
+}
+
+extension NestedAnimalSearchCollectionViewCell: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        collectionView.deselectItem(at: indexPath, animated: true)
+//        if let animalTypeName = viewModel.type(at: indexPath.row)?.name {
+//            viewModel.didSelectAnimalType(animalTypeName)
+//        }
+        onInnerCellTap?()
     }
 }

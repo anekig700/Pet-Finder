@@ -15,13 +15,18 @@ class InnerAnimalSearchCollectionViewCell: UICollectionViewCell {
         label.textColor = .black
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 16)
+        label.numberOfLines = 0
         return label
     }()
+    
+    override var isSelected: Bool {
+        didSet {
+            contentView.backgroundColor = isSelected ? .systemBlue : .clear
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.layer.cornerRadius = 8
-        contentView.clipsToBounds = true
 
         contentView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
