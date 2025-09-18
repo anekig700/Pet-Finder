@@ -94,12 +94,16 @@ extension AnimalSearchViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NestedAnimalSearchCollectionViewCell.identifier, for: indexPath) as! NestedAnimalSearchCollectionViewCell
-        
-        cell.configure(with: viewModel.types)
-        cell.onInnerCellTap = { [weak self] in
-            self?.expandCollectionView()
+        let types = viewModel.types
+        if indexPath.item == 0 {
+            cell.onInnerCellTap = { [weak self] indexPath in
+                self?.expandCollectionView()
+            }
+            cell.configure(with: types)
+        } else {
+            cell.configure(with: types)
         }
-        
+
         return cell
     }
 }

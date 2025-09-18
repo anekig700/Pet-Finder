@@ -41,7 +41,7 @@ class InnerAnimalSearchCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with model: Type) {
-        label.text = model.name
+    func configure(with value: String) {
+        label.text = value
     }
 }

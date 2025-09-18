@@ -22,7 +22,7 @@ class NestedAnimalSearchCollectionViewCell: UICollectionViewCell {
     
     private var items: [Type] = []
     
-    var onInnerCellTap: (() -> Void)?
+    var onInnerCellTap: ((_ indexPath: IndexPath) -> Void)?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -57,7 +57,12 @@ extension NestedAnimalSearchCollectionViewCell: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InnerAnimalSearchCollectionViewCell.identifier, for: indexPath) as? InnerAnimalSearchCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.configure(with: items[indexPath.row])
+        if indexPath.section == 0 {
+            cell.configure(with: items[indexPath.row].name)
+        } else {
+            cell.configure(with: items[indexPath.row].coats[indexPath.row])
+        }
+        
         return cell
     }
 }
@@ -68,6 +73,6 @@ extension NestedAnimalSearchCollectionViewCell: UICollectionViewDelegate {
 //        if let animalTypeName = viewModel.type(at: indexPath.row)?.name {
 //            viewModel.didSelectAnimalType(animalTypeName)
 //        }
-        onInnerCellTap?()
+        onInnerCellTap?(indexPath)
     }
 }
