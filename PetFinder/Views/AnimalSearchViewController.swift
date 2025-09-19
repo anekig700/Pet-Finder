@@ -17,6 +17,9 @@ class AnimalSearchViewController: UIViewController {
     private let viewModel: AnimalSearchViewModel
     private var cancellables: Set<AnyCancellable> = []
     
+    private var selectedAnimal: Type?
+    private var sections: Int = 0
+    
     init(viewModel: AnimalSearchViewModel = AnimalSearchViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -39,6 +42,7 @@ class AnimalSearchViewController: UIViewController {
         viewModel.$types
             .receive(on: DispatchQueue.main)
             .sink { [weak self] types in
+                self?.sections = 1
                 self?.collectionView.reloadData()
             }
             .store(in: &cancellables)
@@ -74,13 +78,14 @@ class AnimalSearchViewController: UIViewController {
             isExpanded = true
 
             UIView.animate(withDuration: 0.3) {
-                self.heightConstraint.constant = CGFloat(5) * 90
+                self.heightConstraint.constant = CGFloat(self.sections) * 90
                 self.view.layoutIfNeeded()
             }
 
-            collectionView.performBatchUpdates({
-                self.collectionView.reloadData()
-            }, completion: nil)
+        self.collectionView.reloadData()
+//            collectionView.performBatchUpdates({
+//                self.collectionView.reloadData()
+//            }, completion: nil)
         }
     
 }
@@ -88,22 +93,36 @@ class AnimalSearchViewController: UIViewController {
 // MARK: - UICollectionViewDataSource
 
 extension AnimalSearchViewController: UICollectionViewDataSource {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        sections
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        5
+        1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NestedAnimalSearchCollectionViewCell.identifier, for: indexPath) as! NestedAnimalSearchCollectionViewCell
         let types = viewModel.types
-        if indexPath.item == 0 {
+        if indexPath.section == 0 {
             cell.onInnerCellTap = { [weak self] indexPath in
+                self?.selectedAnimal = self?.viewModel.type(at: indexPath.row)
+                if let selectedAnimal = self?.selectedAnimal {
+                    self?.sections = selectedAnimal.propertiesCount
+                }
                 self?.expandCollectionView()
             }
             cell.configure(with: types)
-        } else {
-            cell.configure(with: types)
+            cell.questionType = .names(types)
         }
-
+        if let selectedAnimal {
+            if indexPath.section == 1 {
+                cell.configure(with: selectedAnimal.coats)
+                cell.questionType = .coats(selectedAnimal)
+            }
+        }
+        
         return cell
     }
 }

@@ -14,5 +14,9 @@ struct Type: Codable {
     let colors: [String]
     let coats: [String]
     let genders: [String]
+    
+    var propertiesCount: Int {
+        return 4
+    }
 }
 

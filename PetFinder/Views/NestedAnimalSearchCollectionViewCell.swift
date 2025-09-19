@@ -10,6 +10,15 @@ import UIKit
 class NestedAnimalSearchCollectionViewCell: UICollectionViewCell {
     static let identifier = "NestedAnimalSearchCollectionViewCell"
     
+    enum Question {
+        case names([Type])
+        case coats(Type)
+    }
+    
+    var questionType: Question?
+    private var names: [String] = []
+    private var coats: [String] = []
+    
     let horizontalCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -21,6 +30,8 @@ class NestedAnimalSearchCollectionViewCell: UICollectionViewCell {
     }()
     
     private var items: [Type] = []
+    private var properties: [String] = []
+    private var count: Int = 0
     
     var onInnerCellTap: ((_ indexPath: IndexPath) -> Void)?
     
@@ -43,6 +54,13 @@ class NestedAnimalSearchCollectionViewCell: UICollectionViewCell {
     
     func configure(with items: [Type]) {
         self.items = items
+        self.count = items.count
+        horizontalCollectionView.reloadData()
+    }
+    
+    func configure(with properties: [String]) {
+        self.properties = properties
+        self.count = properties.count
         horizontalCollectionView.reloadData()
     }
 }
@@ -50,17 +68,20 @@ class NestedAnimalSearchCollectionViewCell: UICollectionViewCell {
 // MARK: - UICollectionViewDataSource
 extension NestedAnimalSearchCollectionViewCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        items.count
+        count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InnerAnimalSearchCollectionViewCell.identifier, for: indexPath) as? InnerAnimalSearchCollectionViewCell else {
             return UICollectionViewCell()
         }
-        if indexPath.section == 0 {
-            cell.configure(with: items[indexPath.row].name)
-        } else {
-            cell.configure(with: items[indexPath.row].coats[indexPath.row])
+        
+        switch questionType {
+        case .names(let types):
+            cell.configure(with: types[indexPath.row].name)
+        case .coats(let type):
+            cell.configure(with: properties[indexPath.row])
+        case .none: break
         }
         
         return cell
