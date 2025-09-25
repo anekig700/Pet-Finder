@@ -12,7 +12,7 @@ class NestedAnimalSearchCollectionViewCell: UICollectionViewCell {
     
     enum Question {
         case names([Type])
-        case coats(Type)
+        case types([String])
     }
     
     var questionType: Question?
@@ -22,6 +22,7 @@ class NestedAnimalSearchCollectionViewCell: UICollectionViewCell {
     let horizontalCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
+        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
@@ -29,8 +30,6 @@ class NestedAnimalSearchCollectionViewCell: UICollectionViewCell {
         return collectionView
     }()
     
-    private var items: [Type] = []
-    private var properties: [String] = []
     private var count: Int = 0
     
     var onInnerCellTap: ((_ indexPath: IndexPath) -> Void)?
@@ -53,14 +52,14 @@ class NestedAnimalSearchCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with items: [Type]) {
-        self.items = items
         self.count = items.count
+        self.questionType = .names(items)
         horizontalCollectionView.reloadData()
     }
     
     func configure(with properties: [String]) {
-        self.properties = properties
         self.count = properties.count
+        self.questionType = .types(properties)
         horizontalCollectionView.reloadData()
     }
 }
@@ -79,9 +78,10 @@ extension NestedAnimalSearchCollectionViewCell: UICollectionViewDataSource {
         switch questionType {
         case .names(let types):
             cell.configure(with: types[indexPath.row].name)
-        case .coats(let type):
-            cell.configure(with: properties[indexPath.row])
-        case .none: break
+        case .types(let type):
+            cell.configure(with: type[indexPath.row])
+        case .none:
+            break
         }
         
         return cell

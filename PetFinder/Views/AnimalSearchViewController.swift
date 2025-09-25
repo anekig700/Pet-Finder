@@ -74,13 +74,13 @@ class AnimalSearchViewController: UIViewController {
     }
     
     private func expandCollectionView() {
-            guard !isExpanded else { return }
-            isExpanded = true
+        guard !isExpanded else { return }
+        isExpanded = true
 
-            UIView.animate(withDuration: 0.3) {
-                self.heightConstraint.constant = CGFloat(self.sections) * 90
-                self.view.layoutIfNeeded()
-            }
+        UIView.animate(withDuration: 0.3) {
+            self.heightConstraint.constant = CGFloat(self.sections) * 100
+            self.view.layoutIfNeeded()
+        }
 
         self.collectionView.reloadData()
 //            collectionView.performBatchUpdates({
@@ -114,12 +114,15 @@ extension AnimalSearchViewController: UICollectionViewDataSource {
                 self?.expandCollectionView()
             }
             cell.configure(with: types)
-            cell.questionType = .names(types)
         }
+        
         if let selectedAnimal {
             if indexPath.section == 1 {
                 cell.configure(with: selectedAnimal.coats)
-                cell.questionType = .coats(selectedAnimal)
+            } else if indexPath.section == 2 {
+                cell.configure(with: selectedAnimal.colors)
+            } else if indexPath.section == 3 {
+                cell.configure(with: selectedAnimal.genders)
             }
         }
         
